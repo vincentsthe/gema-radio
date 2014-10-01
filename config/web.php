@@ -41,7 +41,10 @@ $config = [
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
+        ],
+        'user' => [
+            'identityClass' => 'app\models\db\User',
+            'enableAutoLogin' => true,
         ]
     ],
     'params' => $params,
