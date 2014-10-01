@@ -105,7 +105,7 @@ class Transaksi extends \yii\db\ActiveRecord
         return self::find()
             ->where(['akun_id' => $akun_id])
             ->where(['between','tanggal',$tanggal_mulai,$tanggal_selesai])
-            ->orderBy(['id'])
+            ->orderBy(['id']);
     }
 
     /**
@@ -115,6 +115,6 @@ class Transaksi extends \yii\db\ActiveRecord
     public static function queryAkun($akun_id){
         return self::find()
             ->where(['akun_id' => $akun_id])
-            ->groupBy($akun_id)
+            ->groupBy($akun_id);
     }
 }
