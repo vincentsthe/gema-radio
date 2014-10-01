@@ -95,4 +95,26 @@ class Transaksi extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Akun::className(), ['id' => 'akun_id']);
     }
+
+    /**
+     * @var int $akun_id id akun
+     * @var time $tanggal_mulai
+     * @var time $tanggal_selesai
+     */
+    public static function queryBukuBesar($akun_id,$tanggal_mulai,$tanggal_selesai){
+        return self::find()
+            ->where(['akun_id' => $akun_id])
+            ->where(['between','tanggal',$tanggal_mulai,$tanggal_selesai])
+            ->orderBy(['id'])
+    }
+
+    /**
+     * @var int $akun_id
+     * @return ActiveQuery
+     */
+    public static function queryAkun($akun_id){
+        return self::find()
+            ->where(['akun_id' => $akun_id])
+            ->groupBy($akun_id)
+    }
 }

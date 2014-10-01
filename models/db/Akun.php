@@ -9,7 +9,11 @@ use Yii;
  *
  * @property integer $id
  * @property integer $nama
+ * @property integer $parent
+ * @property integer $harga
  *
+ * @property Akun $parent0
+ * @property Akun[] $akuns
  * @property Transaksi[] $transaksis
  * @property TransaksiLain[] $transaksiLains
  */
@@ -29,8 +33,8 @@ class Akun extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama'], 'required'],
-            [['nama'], 'integer']
+            [['nama', 'parent', 'harga'], 'required'],
+            [['nama', 'parent', 'harga'], 'integer']
         ];
     }
 
@@ -42,7 +46,25 @@ class Akun extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'nama' => 'Nama',
+            'parent' => 'Parent',
+            'harga' => 'Harga',
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent0()
+    {
+        return $this->hasOne(Akun::className(), ['id' => 'parent']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAkuns()
+    {
+        return $this->hasMany(Akun::className(), ['parent' => 'id']);
     }
 
     /**
@@ -59,5 +81,17 @@ class Akun extends \yii\db\ActiveRecord
     public function getTransaksiLains()
     {
         return $this->hasMany(TransaksiLain::className(), ['akun_id' => 'id']);
+    }
+
+    /**
+     * update harga dengan query ke transaksi
+     * memakan waktu cukup lama
+     */
+    public function updateHarga(){
+        $this->harga = self::getTransaksis()
+            ->select(['sum(nominal)'])
+            ->groupBy($this->id)
+            ->all();
+        $this->save();
     }
 }

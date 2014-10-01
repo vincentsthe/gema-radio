@@ -69,7 +69,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new Exception("Unsupported operation exception", 1);
+        throw new Exception("Unsupported operation exception");
         
         //return static::findOne(['access_token' => $token]);
     }
@@ -81,15 +81,21 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     public function getAuthKey()
     {
-        throw new Exception("Unsupported operation exception", 1);
+        //throw new Exception("Unsupported operation exception");
     }
 
     public function validateAuthKey($authKey)
     {
-        throw new Exception("Unsupported operation exception", 1);
+        //throw new Exception("Unsupported operation exception");
     }
 
     public function validatePassword($password){
         return $this->password === sha1($password);
     }
+
+    public function isAdmin(){ return $this->is_admin; }
+    public function isDirektur(){ return $this->is_direktur; }
+    public function isManajerKeuangan(){ return $this->is_manajer; }
+    public function isPetugas(){ return $this->is_petugas; }
+
 }

@@ -58,4 +58,22 @@ class Siaran extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Transaksi::className(), ['id' => 'transaksi_id']);
     }
+
+    /**
+     * @var int $duration duration of time in minutes
+     * @return ActiveQuery Instance
+     */
+    public function queryToday($durations)
+    {
+        $currentDate = date('Y-m-d');
+        $currentTime = date('h:i:s');
+        return self::find()
+            ->with(['transaksi' => function($query) {
+                $query->select(['deskripsi']);
+            }])
+            ->where(["waktu_mulai >= ".$currentTime + $durations])
+            ->orderBy(['transaksi_id']);
+    }
+
+
 }
