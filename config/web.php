@@ -45,6 +45,20 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\db\User',
             'enableAutoLogin' => true,
+        ],
+    ],
+    'modules' => [
+        'adminradio' => [
+            'class' => 'app\modules\adminradio\AdminRadioModule',
+        ],
+        'direktur' => [
+            'class' => 'app\modules\direktur\DirekturModule',
+        ],
+        'manajerkeuangan' => [
+            'class' => 'app\modules\manajerkeuangan\ManajerKeuanganModule',
+        ],
+        'petugas' => [
+            'class' => 'app\modules\petugas\PetugasModule',
         ]
     ],
     'params' => $params,
