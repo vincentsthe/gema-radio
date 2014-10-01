@@ -6,6 +6,7 @@ use app\models\db\User;
 use Yii;
 
 abstract class BaseController extends \yii\web\Controller {
+	public $layout = '@app/views/layouts/sidebar';
 
 	public function behaviors(){
 		return [

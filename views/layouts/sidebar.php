@@ -1,4 +1,5 @@
 <?php 
+use Yii;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -10,7 +11,7 @@ use yii\widgets\Breadcrumbs;
         <div class="col-md-3 sidebar">
             
             <?php
-                if(1) {                             //if admin TODO change this
+                if(isset(Yii::$app->user->identity) && (Yii::$app->user->identity->isAdmin())) {
                     echo '<h5>Menu Admin</h5>';
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
@@ -24,7 +25,7 @@ use yii\widgets\Breadcrumbs;
             ?>
 
             <?php
-                if(1) {                             //if direktur TODO change this
+                if(isset(Yii::$app->user->identity) && (Yii::$app->user->identity->isDirektur())) {
                     echo '<h5>Menu Direktur</h5>';
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
@@ -41,7 +42,7 @@ use yii\widgets\Breadcrumbs;
             ?>
 
             <?php
-                if(1) {                             //if Manajer Keuangan TODO change this
+                if(isset(Yii::$app->user->identity) && (Yii::$app->user->identity->isManajerKeuangan())) {
                     echo '<h5>Menu Manajer Keuangan</h5>';
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
@@ -60,7 +61,7 @@ use yii\widgets\Breadcrumbs;
             ?>
 
             <?php
-                if(1) {                             //if Petugas TODO change this
+                if(isset(Yii::$app->user->identity) && (Yii::$app->user->identity->isPetugas())) {
                     echo '<h5>Menu Petugas</h5>';
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
