@@ -48,6 +48,14 @@ $config = [
         ]
     ],
     'params' => $params,
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\AdminModule',
+        ],
+        'petugas' => [
+            'class' => 'app\modules\petugas\PetugasModule',
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {
