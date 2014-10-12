@@ -13,15 +13,14 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class TimePickerAsset extends AssetBundle
+class CreateTransaksiAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
-        'css/jquery.datetimepicker.css',
     ];
     public $js = [
-        'js/jquery.datetimepicker.js'
+        'js/transaksi.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

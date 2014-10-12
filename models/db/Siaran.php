@@ -8,7 +8,7 @@ use Yii;
  * This is the model class for table "siaran".
  *
  * @property integer $id
- * @property string $tanngal
+ * @property string $tanggal
  * @property integer $transaksi_id
  * @property string $waktu_mulai
  * @property string $waktu_selesai
@@ -31,8 +31,8 @@ class Siaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tanngal', 'transaksi_id', 'waktu_mulai', 'waktu_selesai'], 'required'],
-            [['tanngal', 'waktu_mulai', 'waktu_selesai'], 'safe'],
+            [['tanggal', 'transaksi_id', 'waktu_mulai', 'waktu_selesai'], 'required'],
+            [['tanggal', 'waktu_mulai', 'waktu_selesai'], 'safe'],
             [['transaksi_id'], 'integer']
         ];
     }
@@ -44,7 +44,7 @@ class Siaran extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'tanngal' => 'Tanngal',
+            'tanggal' => 'tanggal',
             'transaksi_id' => 'Transaksi ID',
             'waktu_mulai' => 'Waktu Mulai',
             'waktu_selesai' => 'Waktu Selesai',
@@ -63,7 +63,7 @@ class Siaran extends \yii\db\ActiveRecord
      * @var int $duration duration of time in minutes
      * @return ActiveQuery Instance
      */
-    public function queryToday($durations)
+    public static function queryToday($durations)
     {
         $currentDate = date('Y-m-d');
         $currentTime = date('h:i:s');
@@ -71,8 +71,9 @@ class Siaran extends \yii\db\ActiveRecord
             ->with(['transaksi' => function($query) {
                 $query->select(['deskripsi']);
             }])
-            ->where(["waktu_mulai >= ".$currentTime + $durations])
-            ->orderBy(['transaksi_id']);
+            ->where("`waktu_mulai`>= ".($currentTime + $durations))
+            ->where("`tanggal` = '".$currentDate."'")
+            ->orderBy(['transaksi_id' => SORT_ASC]);
     }
 
 

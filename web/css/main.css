@@ -1,0 +1,7 @@
+.plain-box {
+	border: 1px solid #DDD;
+	width: 90%;
+	padding: 20px;
+	min-height: 50px;
+	margin: 20px 0px;
+}

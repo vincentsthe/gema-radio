@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\form\LoginForm;
 use app\models\ContactForm;
 use app\models\db\User;
+use app\models\db\Siaran;
 
 class SiteController extends Controller
 {
@@ -92,6 +93,13 @@ class SiteController extends Controller
 
     public function actionAbout()
     {
+        $hasil = Siaran::queryToday(10*60*60)->all();
+
+        foreach ($hasil as $data) {
+            print_r($data);
+            echo "asdadsa<br>";
+        }
+
         return $this->render('about');
     }
 }

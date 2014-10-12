@@ -16,7 +16,7 @@ use yii\widgets\Breadcrumbs;
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
-                            ['label' => 'Notification', 'url' => ['/admin/default/siaran']],
+                            ['label' => 'Notification', 'url' => ['/adminradio/notifikasi/siaran']],
                             ['label' => 'User Management', 'url' => ['/user/index']],
                             ['label' => 'Settings', 'url' => ['/user/index']],
                         ],
