@@ -3,25 +3,45 @@
 namespace app\modules\adminradio\controllers;
 
 use yii\web\Controller;
-use yii\filters\AccessControl;
-use app\models\form\ChangePasswordForm;
-use Yii;
-use yii\web\Session;
+use app\models\db\User;
+use yii\data\ActiveDataProvider;
 
 class UserController extends BaseController
 {
-    public function actionGantipassword()
+    public function actionIndex()
     {
-    	$model = new ChangePasswordForm();
-    	//var_dump(Yii::$app->user);
-    	//return $this->render('gantipassword',['model' => $model]);
-    	if ($model->load(Yii::$app->request->post())){
-    		$model->id = Yii::$app->user->identity->id;
-    		$session = new Session(); $session->open();
-    		if ($model->validate() && $model->updatePassword()){
-    			$session->setFlash('message',"Ganti password berhasil");
-    		}		
+    	$dataProvider = new ActiveDataProvider([
+            'query' => User::find()
+        ]);
+        return $this->render('index',[
+        	'dataProvider' => $dataProvider
+        ]);
+    }
+
+    /**
+     * @param int $id user id
+     */
+    public function actionResetpassword($id){
+    	$model = $this->loadModel($id);
+    	$model->password = sha1($model->username);
+
+    	if ($model->save()){
+    		return $this->render('resetpassword',[
+    			'model' => $model,
+    		]);
     	}
-        return $this->render('gantipassword',['model' => $model]);
+    	
+    }
+
+    /**
+     * @param int $id user id
+     * @throws NotFoundHttpException
+     */
+    protected function loadModel($id){
+    	if (($model = User::find()->where(['id' => $id])->one()) !== null){
+    		return $model;
+    	} else {
+    		throw new NotFoundHttpException('The requested page does not exist.');
+    	}
     }
 }
