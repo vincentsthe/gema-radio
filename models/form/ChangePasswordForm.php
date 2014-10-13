@@ -69,7 +69,8 @@ class ChangePasswordForm extends Model
         if (($user !== null) && ($user->password === sha1($this->oldPassword))){
             return true;
         } else {
-            $this->addError($attribute,"Password lama: ".$user->password." cek dengan".sha1($this->oldPassword));
+            $this->addError($attribute,"Password lama tidak sesuai");
+            // /$this->addError($attribute,"Password lama: ".$user->password." cek dengan".sha1($this->oldPassword));
             return false;
         };
     }
