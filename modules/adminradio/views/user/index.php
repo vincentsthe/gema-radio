@@ -1,12 +1,24 @@
-<div class="adminradio-default-index">
-    <h1><?= $this->context->action->uniqueId ?></h1>
-    <p>
-        This is the view content for action "<?= $this->context->action->id ?>".
-        The action belongs to the controller "<?= get_class($this->context) ?>"
-        in the "<?= $this->context->module->id ?>" module.
-    </p>
-    <p>
-        You may customize this page by editing the following file:<br>
-        <code><?= __FILE__ ?></code>
-    </p>
-</div>
+<?php
+    use yii\grid\GridView;
+    use yii\helpers\Html;
+?>
+<h2>Manajemen Pengguna</h2>
+<br>
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'columns' => [
+        ['class' => 'yii\grid\SerialColumn'],
+        'fullname',
+        'username',
+        [
+            'label' => 'Password',
+            'class' => 'yii\grid\DataColumn',
+            'value' => function($model,$key,$index,$column){
+                    return Html::a('reset',['/adminradio/user/resetpassword','id'=>$model->id]);
+                },
+            'format' => 'html'
+        ]
+
+        //['class' => 'yii\grid\ActionColumn'],
+    ],
+]); ?>

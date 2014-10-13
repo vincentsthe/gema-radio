@@ -21,8 +21,6 @@ class NotifikasiController extends BaseController
 	 */
     public function actionSiaran($duration = null)
     {
-    	var_dump($duration);
-    	//exit();
     	if ($duration !== null){
     		$this->_session[DURATION_SESSION_KEY] = $duration;
     	} else {

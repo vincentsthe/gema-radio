@@ -26,8 +26,7 @@ use yii\widgets\Breadcrumbs;
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
                             ['label' => 'Notification', 'url' => ['/adminradio/notifikasi/siaran']],
-                            ['label' => 'User Management', 'url' => ['/user/index']],
-                            ['label' => 'Settings', 'url' => ['/user/index']],
+                            ['label' => 'User Management', 'url' => ['/adminradio/user/index']],
                         ],
                     ]);
                 }
