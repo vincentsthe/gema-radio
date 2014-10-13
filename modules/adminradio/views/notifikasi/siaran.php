@@ -2,8 +2,8 @@
     use yii\grid\GridView;
 
 ?>
-
-<?=$this->render('_tabs'); ?>
+<h2>Siaran</h2>
+<?=$this->render('_tabs',['duration'=>$duration]); ?>
 <br>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
@@ -18,6 +18,6 @@
 ]); ?>
 
 <script type="text/javascript">
-    //reload each 30 seconds
-    window.setTimeout('location.reload()',30*1000);
+    //reload each duration seconds
+    window.setTimeout('location.reload()',<?=$duration;?>*60*1000);
 </script>
