@@ -25,11 +25,12 @@ var addInputField = function(siaran, tanggal, jamMulai, jamSelesai) {
 	document.getElementById("input").appendChild(jamSelesaiInput);
 
 	$("#tanggal" + siaran).val(tanggal);
-	$("#jamMulai" + siaran).val(jamMulai + ":00");
-	$("#jamSelesai" + siaran).val(jamSelesai + ":00");
+	$("#jamMulai" + siaran).val(jamMulai);
+	$("#jamSelesai" + siaran).val(jamSelesai);
 }
 
 var chooseTab = function(siaran) {
+
 	if(siaran == 0) {
 		activeTab = 0;
 
@@ -46,7 +47,7 @@ var chooseTab = function(siaran) {
 		$("#jamSelesaiSiaran").prop("disabled", false);
 
 		//save the currentTab first
-		if((activeTab!=0) && (activeTab <= currentTab)) {
+		if((activeTab!=0) && (activeTab <= tab)) {
 			tanggalSiaran[activeTab-1] = $("#tanggalSiaran").val();
 			jamMulaiSiaran[activeTab-1] = $("#jamMulaiSiaran").val();
 			jamSelesaiSiaran[activeTab-1] = $("#jamSelesaiSiaran").val();
@@ -103,10 +104,6 @@ var addTab = function(siaran) {
 	jamMulaiSiaran.push(hour + ":" + minute);
 	jamSelesaiSiaran.push(hour + ":" + minute);
 
-	if(siaran == 1) {
-		chooseTab(siaran);
-	}
-
 	var tmp = activeTab;
 
 	$("#tab" + siaran).click(function() {
@@ -139,8 +136,6 @@ var removeTab = function(siaran) {
 $(document).ready(function() {
 
 	$("#noOrder").prop("disabled", true);
-	$("#jumlahSiaran").val(0);
-	$("#siaranPerHari").val(0);
 
 	$("#tanggal").datetimepicker({
 		timepicker:false,
@@ -183,13 +178,40 @@ $(document).ready(function() {
 		format: "H:i",
 	});
 
-	chooseTab(0);
+	$("#tanggalSiaran").prop("disabled", true);
+	$("#jamMulaiSiaran").prop("disabled", true);
+	$("#jamSelesaiSiaran").prop("disabled", true);
+
+	//initialize siaran
+	$.get("?request=siaran", function(data) {
+		siaran = data;
+		chooseTab(0);
+
+		var i=0;
+		for(var d in siaran) {
+			addTab(i+1);
+			tanggalSiaran[i] = siaran[d]['tanggal'];
+			jamMulaiSiaran[i] = siaran[d]['jamMulai'];
+			jamSelesaiSiaran[i] = siaran[d]['jamSelesai'];
+			i++;
+		}
+		console.log(jamMulaiSiaran);
+
+		tab = i;
+
+		if(tab > 0) {
+			chooseTab(1);
+		}
+	});
 
 	$("#siaranPerHari").change(function() {
 		currentTab = parseInt($("#siaranPerHari").val());
 
 		if(tab < currentTab) {
 			addTab(currentTab);
+			if(currentTab == 1) {
+				chooseTab(1);
+			}
 		} else {
 			removeTab(tab);
 		}

@@ -72,7 +72,8 @@ use yii\widgets\Breadcrumbs;
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
-                            ['label' => 'Transaksi', 'url' => ['/petugas/default/createTransaksi']],
+                            ['label' => 'Transaksi', 'url' => ['/petugas/transaksi/createnewtransaksi']],
+                            ['label' => 'Ubah Password', 'url' => ['/user/index']],
                         ],
                     ]);
                 }
