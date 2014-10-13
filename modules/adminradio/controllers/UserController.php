@@ -10,7 +10,6 @@ use yii\web\Session;
 
 class UserController extends BaseController
 {
-
     public function actionGantipassword()
     {
     	$model = new ChangePasswordForm();

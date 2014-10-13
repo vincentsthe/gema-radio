@@ -1,5 +1,4 @@
 <?php 
-use Yii;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
@@ -9,7 +8,17 @@ use yii\widgets\Breadcrumbs;
 <?php $this->beginContent('@app/views/layouts/layout.php'); ?>
     <div class="row">
         <div class="col-md-3 sidebar">
-            
+            <?php
+                if(isset(Yii::$app->user->identity) && (Yii::$app->user->identity->isAdmin())) {
+                    echo '<h5>Menu Utama</h5>';
+                    echo Nav::widget([
+                        'options' => ['class' => 'nav nav-sidebar'],
+                        'items' => [
+                            ['label' => 'Ganti Password', 'url' => ['/user/changepassword','id'=>Yii::$app->user->identity->id]],
+                        ],
+                    ]);
+                }
+            ?>
             <?php
                 if(isset(Yii::$app->user->identity) && (Yii::$app->user->identity->isAdmin())) {
                     echo '<h5>Menu Admin</h5>';
@@ -35,7 +44,6 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/user/index']],
-                            ['label' => 'Ubah Password', 'url' => ['/user/index']],
                         ],
                     ]);
                 }
@@ -54,7 +62,6 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/user/index']],
-                            ['label' => 'Ubah Password', 'url' => ['/user/index']],
                         ],
                     ]);
                 }

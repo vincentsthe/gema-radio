@@ -1,12 +1,22 @@
-<div class="adminradio-default-index">
-    <h1><?= $this->context->action->uniqueId ?></h1>
-    <p>
-        This is the view content for action "<?= $this->context->action->id ?>".
-        The action belongs to the controller "<?= get_class($this->context) ?>"
-        in the "<?= $this->context->module->id ?>" module.
-    </p>
-    <p>
-        You may customize this page by editing the following file:<br>
-        <code><?= __FILE__ ?></code>
-    </p>
-</div>
+<?php
+    use yii\grid\GridView;
+
+?>
+
+<?=$this->render('_tabs'); ?>
+<br>
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'columns' => [
+        ['class' => 'yii\grid\SerialColumn'],
+        'tanggal',
+        'transaksi.deskripsi',
+        'finished'
+        //['class' => 'yii\grid\ActionColumn'],
+    ],
+]); ?>
+
+<script type="text/javascript">
+    //reload each 30 seconds
+    window.setTimeout('location.reload()',30*1000);
+</script>

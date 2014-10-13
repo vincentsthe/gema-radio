@@ -13,6 +13,8 @@ use app\models\db\Siaran;
 
 class SiteController extends Controller
 {
+    public $layout = '@app/views/layouts/sidebar';
+
     public function behaviors()
     {
         return [
@@ -51,11 +53,27 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $user = Yii::$app->user->identity;
+        if (!Yii::$app->user->isGuest){
+            if ($user->isAdmin()){
+                $this->redirect(['/adminradio']);
+            } else if ($user->isDirektur()){
+                $this->redirect(['/direktur']);
+            } else if ($user->isManajerKeuangan()){
+                $this->redirect(['/manajerkeuangan']);
+            } else if ($user->isPetugas()){
+                $this->redirect(['/petugas']);
+            } else {
+                throw new \yii\web\HttpException(401,"Akun anda tidak memiliki hak akses apapun. Silakan hubungi admin.");
+            }
+        } else {
+            $this->redirect(['site/login']);
+        }
     }
 
     public function actionLogin()
     {
+        $this->layout = '@app/views/layouts/main';
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -79,6 +97,7 @@ class SiteController extends Controller
 
     public function actionContact()
     {
+        $this->layout = '@app/views/layouts/main';
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -93,13 +112,7 @@ class SiteController extends Controller
 
     public function actionAbout()
     {
-        $hasil = Siaran::queryToday(10*60*60)->all();
-
-        foreach ($hasil as $data) {
-            print_r($data);
-            echo "asdadsa<br>";
-        }
-
+        $this->layout = '@app/views/layouts/main';
         return $this->render('about');
     }
 }
