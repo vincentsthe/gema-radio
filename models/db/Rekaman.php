@@ -46,6 +46,7 @@ class Rekaman extends \yii\db\ActiveRecord
             'transaksi_id' => 'Transaksi ID',
             'tanggal' => 'Tanggal',
             'waktu_deadline' => 'Waktu Deadline',
+            'finished' => 'Status',
         ];
     }
 
@@ -61,7 +62,7 @@ class Rekaman extends \yii\db\ActiveRecord
      * @var int $duration duration of time in minutes
      * @return ActiveQuery Instance
      */
-    public function queryToday($durations)
+    public static function queryToday($durations)
     {
         $currentDate = date('Y-m-d');
         $currentTime = date('h:i:s');
@@ -69,6 +70,6 @@ class Rekaman extends \yii\db\ActiveRecord
             ->with(['transaksi' => function($query) {
                 $query->select(['deskripsi']);
             }])
-            ->orderBy(['transaksi_id']);
+            ->orderBy(['transaksi_id' => SORT_ASC]);
     }
 }
