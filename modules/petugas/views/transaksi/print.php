@@ -2,8 +2,11 @@
 	
 	use yii\helpers\html;
 	use app\helpers\TimeHelper;
+	use app\assets\PrintAsset;
 
 	$this->title = 'Transaksi';
+
+	PrintAsset::register($this);
 ?>
 
 <br>
@@ -19,8 +22,9 @@
 	</div>
 <?php endif; ?>
 
+<div id="klien">
 <h2 class="text-center">Bukti Pembayaran Kas</h2>
-
+<br><br>
 <div class="row">
 	<div class="col-md-12">
 		<h4>No. <?= $transaksi->akun_id . "-" . TimeHelper::timeStampToFormattedDate(TimeHelper::formattedDateToTimestamp($transaksi->tanggal, '%Y-%m-%d'), 'd/m/Y') . "-" . $transaksi->id ?></h4>
@@ -124,16 +128,19 @@
 	<?php endforeach;?>
 </table>
 
+</div>
+
 <div class="text-center">
-	<button class="btn btn-success">Cetak</button>
+	<button id="klienButton" class="btn btn-success">Cetak</button>
 </div>
 
 <br><br>
 <hr>
 
+<div id="arsip">
 <h2 class="text-center">Bukti Pembayaran Kas</h2>
-
 <h2 class="text-right" style="color:#555;margin-right:40px;">Arsip</h2>
+<br><br>
 
 <div class="row">
 	<div class="col-md-12">
@@ -237,10 +244,51 @@
 		</tr>
 	<?php endforeach;?>
 </table>
+</div>
 
 <br><br>
 <div class="text-center">
-	<button class="btn btn-success">Cetak</button>
+	<button id="arsipButton" class="btn btn-success">Cetak</button>
 </div>
 
 <br><br><br>
+
+<?php
+	$this->registerJs('
+		$("#klienButton").click(function() {
+			html2canvas($("#klien"), {
+				onrendered: function(canvas) {
+					var doc = new jsPDF();
+					var context = canvas.getContext("2d");
+					var newCanvas = document.createElement("canvas");
+					newCanvas.width = 900;
+					newCanvas.height = 3000;
+					var newContext = newCanvas.getContext("2d");
+					newContext.scale(.7, .7);
+					newContext.drawImage(canvas, 130, 130);
+					var canvasData = newCanvas.toDataURL("images/jpeg");
+					doc.addImage(canvasData, "JPEG", 0, 0);
+					doc.save("test.pdf");
+				}
+			});
+		});
+
+		$("#arsipButton").click(function() {
+			html2canvas($("#arsip"), {
+				onrendered: function(canvas) {
+					var doc = new jsPDF();
+					var context = canvas.getContext("2d");
+					var newCanvas = document.createElement("canvas");
+					newCanvas.width = 900;
+					newCanvas.height = 3000;
+					var newContext = newCanvas.getContext("2d");
+					newContext.scale(.7, .7);
+					newContext.drawImage(canvas, 130, 130);
+					var canvasData = newCanvas.toDataURL("images/jpeg");
+					doc.addImage(canvasData, "JPEG", 0, 0);
+					doc.save("test.pdf");
+				}
+			});
+		});
+	');
+?>
