@@ -38,8 +38,8 @@ use yii\widgets\Breadcrumbs;
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
-                            ['label' => 'Notification', 'url' => ['/siaran/index']],
-                            ['label' => 'Buku Besar', 'url' => ['/user/index']],
+                            ['label' => 'Notification', 'url' => ['/adminradio/notifikasi']],
+                            ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/user/index']],
@@ -57,7 +57,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Konfirmasi', 'url' => ['/siaran/index']],
                             ['label' => 'Transaksi', 'url' => ['/user/index']],
                             ['label' => 'Ubah', 'url' => ['/user/index']],
-                            ['label' => 'Buku Besar', 'url' => ['/user/index']],
+                            ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/user/index']],

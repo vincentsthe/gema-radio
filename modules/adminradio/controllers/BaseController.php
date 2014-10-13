@@ -25,8 +25,8 @@ abstract class BaseController extends \yii\web\Controller {
 					],
 					[
 						'allow' => false,
-						'roles' => ['@','?'],
-					],
+						'roles' => ['@','?']
+					]
 				]
 			]
 		];

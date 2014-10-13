@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\direktur\controllers;
+namespace app\modules\manajerkeuangan\controllers;
 
 use yii\filters\AccessControl;
 use app\models\db\User;
@@ -7,6 +7,7 @@ use Yii;
 
 abstract class BaseController extends \yii\web\Controller {
 
+	public $layout = '@app/views/layouts/sidebar';
 	public function behaviors(){
 		return [
 			'access' => [

@@ -2,20 +2,43 @@
 
 namespace app\modules\adminradio\controllers;
 
+use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use app\models\db\Siaran;
 use app\models\db\Rekaman;
 use yii\data\ActiveDataProvider;
 use yii\web\Session;
+use yii\helpers\ArrayHelper;
 
 const DURATION_SESSION_KEY = 'adminradio.notifikasi.durasi';
 
 class NotifikasiController extends BaseController
 {
-	
-
+	public $defaultAction = 'siaran';
 	public $_session;
 
+	public function behaviors(){
+		return ArrayHelper::merge([
+			//allow access to direktur
+			'access' => [
+				'class' => AccessControl::className(),
+				'rules' => [
+					[
+						'allow' => true,
+						'roles' => ['@'],
+						'matchCallback' => function($rule,$action){
+							if (isset(Yii::$app->user->identity)){
+								return Yii::$app->user->identity->isDirektur();
+							}
+							else
+								return false;
+						}		
+					],
+				]
+			]
+		],parent::behaviors());
+	}
 	/**
 	 * @param int $duration in minutes. default to 24 hours.
 	 */
