@@ -4,22 +4,28 @@
 ?>
 <h2>Buku Besar</h2>
 <br>
-<?= $this->render('_form',['model'=>$model]); ?>
-<?php /*GridView::widget([
+<?= $this->render('_search',['model'=>$model,'akuns' => $akuns]); ?>
+<?=GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],
-        'fullname',
-        'username',
+        'id',
+        'tanggal',
+        'jenis_transaksi',
         [
-            'label' => 'Password',
             'class' => 'yii\grid\DataColumn',
+            'label' => 'Debet',
             'value' => function($model,$key,$index,$column){
-                    return Html::a('reset',['/adminradio/user/resetpassword','id'=>$model->id]);
-                },
-            'format' => 'html'
+                return ($model->nominal >= 0)?$model->nominal:' ';
+            }
+        ],
+        [
+            'class' => 'yii\grid\DataColumn',
+            'label' => 'Kredit',
+            'value' => function($model,$key,$index,$column){
+                return ($model->nominal < 0)?-$model->nominal:' ';
+            }
         ]
-
-        //['class' => 'yii\grid\ActionColumn'],
     ],
-]); */?>
+]);
+?>

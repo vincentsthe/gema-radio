@@ -9,7 +9,8 @@ use yii\data\ActiveDataProvider;
 use Yii;
 
 use app\models\db\Transaksi;
-use app\modules\manajerkeuangan\models\form\BukuBesarForm;
+use app\models\db\Akun;
+use app\modules\manajerkeuangan\models\BukuBesar;
 
 
 class BukubesarController extends BaseController
@@ -41,14 +42,14 @@ class BukubesarController extends BaseController
 
     public function actionIndex()
     {
-    	$model = new BukuBesarForm;
-    	/*
-    	$dataProvider = new ActiveDataProvider([
-    		'query' => Transaksi::queryBukuBesar($akun_id,$tanggal_mulai,$tanggal_selesai)
-    	]);*/
+    	$model = new BukuBesar;
+    	$akuns = Akun::find()->all();
+    	$dataProvider = $model->search(Yii::$app->request->queryParams);
+
         return $this->render('index',[
         	'model' => $model,
-        	//'dataProvider' => $dataProvider,
+        	'akuns' => $akuns,
+        	'dataProvider' => $dataProvider,
         ]);
     }
 }
