@@ -56,7 +56,7 @@ use yii\widgets\Breadcrumbs;
                         'items' => [
                             ['label' => 'Konfirmasi', 'url' => ['/siaran/index']],
                             ['label' => 'Transaksi', 'url' => ['/user/index']],
-                            ['label' => 'Ubah', 'url' => ['/user/index']],
+                            ['label' => 'Ubah', 'url' => ['/transaksi/index']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
