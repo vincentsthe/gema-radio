@@ -1,9 +1,10 @@
 <?php
-use yii\widgets\ActiveForm;
-use yii\helpers\Html;
-use yii\web\Session;
-$session = new Session(); $session->open();
+	use yii\widgets\ActiveForm;
+	use yii\helpers\Html;
+	use yii\web\Session;
+	$session = new Session(); $session->open();
 ?>
+
 <h1>Ganti Password</h1>
 <?php $form = ActiveForm::begin(['enableClientValidation' => true]); ?>
 <?= $form->errorSummary($model); ?>
@@ -19,7 +20,6 @@ $session = new Session(); $session->open();
 	</div>
 <?php endif; ?>
 
-<?= $session->getFlash('message'); ?>
 <?= $form->field($model,'oldPassword')->passwordInput(); ?>
 <?= $form->field($model,'newPassword')->passwordInput(); ?>
 <?= $form->field($model,'repeatNewPassword')->passwordInput(); ?>

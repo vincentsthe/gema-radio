@@ -73,7 +73,7 @@ use yii\widgets\Breadcrumbs;
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
                             ['label' => 'Transaksi', 'url' => ['/petugas/transaksi/createnewtransaksi']],
-                            ['label' => 'Ubah Password', 'url' => ['/user/index']],
+                            ['label' => 'Ubah Password', 'url' => ['/petugas/default/changepassword']],
                         ],
                     ]);
                 }
