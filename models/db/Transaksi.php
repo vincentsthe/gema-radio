@@ -75,7 +75,7 @@ class Transaksi extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRekamen()
+    public function getRekaman()
     {
         return $this->hasMany(Rekaman::className(), ['transaksi_id' => 'id']);
     }
@@ -91,9 +91,31 @@ class Transaksi extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAkun()
+    public function getParent()
     {
-        return $this->hasOne(Akun::className(), ['id' => 'akun_id']);
+        return $this->hasOne(Akun::className(), ['id' => 'parent']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getChilds()
+    {
+        return $this->hasMany(Akun::className(),['parent' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTransaksis(){
+        return $this->hasMany(Transaksi::className(),['id'=>'akun_id']);
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTransaksiLains(){
+       return $this->hasMany(TransaksiLain::className(), ['akun_id' => 'id']);
     }
 
     /**
@@ -117,4 +139,8 @@ class Transaksi extends \yii\db\ActiveRecord
             ->where(['akun_id' => $akun_id])
             ->groupBy($akun_id);
     }
+
+    
+
+
 }

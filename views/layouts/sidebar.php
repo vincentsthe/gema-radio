@@ -40,8 +40,8 @@ use yii\widgets\Breadcrumbs;
                         'items' => [
                             ['label' => 'Notification', 'url' => ['/adminradio/notifikasi']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
-                            ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
-                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
+                            ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/laporankeuangan']],
+                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/bukutabungan']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);
@@ -58,8 +58,8 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Transaksi', 'url' => ['/manajerkeuangan/transaksi/add']],
                             ['label' => 'Ubah', 'url' => ['/user/index']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
-                            ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
-                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
+                            ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/bukutabungan']],
+                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/bukutabungan']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);

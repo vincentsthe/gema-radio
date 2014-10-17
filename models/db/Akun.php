@@ -33,7 +33,7 @@ class Akun extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'harga', 'kode', 'parent'], 'required'],
+            [['nama', 'harga', 'parent'], 'required'],
             [['parent', 'harga'], 'integer']
         ];
     }
@@ -55,17 +55,17 @@ class Akun extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getParent0()
+    public function getParent()
     {
-        return $this->hasOne(Akun::className(), ['id' => 'parent']);
+        return self::find()->where(['id'=>$this->parent]);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAkuns()
+    public function getChilds()
     {
-        return $this->hasMany(Akun::className(), ['parent' => 'id']);
+        return self::find()->where(['parent' => $this->id]);
     }
 
     /**
@@ -85,20 +85,41 @@ class Akun extends \yii\db\ActiveRecord
     }
 
     /**
-     * update harga dengan query ke transaksi
-     * memakan waktu cukup lama
+     * update harga hanya berdasarkan anak2nya tepat di bawahnya/transaksi
      */
     public function updateHarga(){
-        $this->harga = self::getTransaksis()
-            ->select(['sum(nominal)'])
-            ->groupBy($this->id)
-            ->all();
-        $this->save();
+        //if leaf
+        if ($this->getChilds()->count() == 0){
+            $this->harga = $this->getTransaksis()->sum('nominal') + $this->getTransaksiLains()->sum('nominal');
+        } else {
+            $this->harga = $this->getChilds()->sum('harga');
+        }
+        if (!$this->save()){
+            var_dump($this->getErrors());
+            throw new Exception("Error Processing Request", 1);
+        }
+        
     }
 
-    public function queryLeaf() {
-        return Akun::find()
-            ->where('kode IS NOT NULL')
-            ->all();
+    /**
+     * update harga dengan anak2nya ikut diupdate
+     */
+    public function updateDFS(){
+        $childs = $this->getChilds()->all();
+        foreach($childs as $child){
+            $child->updateDFS();
+        }
+        $this->updateHarga();
     }
+
+    /**
+     * WARNING: sangat costly
+     */
+    public static function updateAllHarga(){
+        $roots = self::find()->where(['parent'=>0])->all();
+        foreach($roots as $root){
+            $root->updateDFS();
+        }
+    }
+
 }
