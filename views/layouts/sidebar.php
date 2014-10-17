@@ -42,7 +42,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
-                            ['label' => 'Konfigurasi Pengguna', 'url' => ['/user/index']],
+                            ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);
                 }
@@ -60,7 +60,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
-                            ['label' => 'Konfigurasi Pengguna', 'url' => ['/user/index']],
+                            ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);
                 }

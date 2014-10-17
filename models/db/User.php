@@ -19,6 +19,9 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
+    //index role to be converted to is_admin etc
+    public $_verify_password;
+
     /**
      * @inheritdoc
      */
@@ -33,10 +36,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'fullname'], 'required'],
+            [['username', 'password', 'fullname','_verify_password'], 'required'],
             [['is_admin', 'is_direktur', 'is_manajer', 'is_petugas', 'login_trial'], 'integer'],
-            [['username', 'password', 'fullname'], 'string', 'max' => 100],
-            [['username'], 'unique']
+            [['username', 'password', 'fullname','_verify_password'], 'string', 'max' => 100],
+            [['username'], 'unique'],
+            [['_verify_password'], 'compare', 'compareAttribute' => 'password']
         ];
     }
 
@@ -50,10 +54,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'username' => 'Username',
             'password' => 'Password',
             'fullname' => 'Fullname',
-            'is_admin' => 'Is Admin',
-            'is_direktur' => 'Is Direktur',
-            'is_manajer' => 'Is Manajer',
-            'is_petugas' => 'Is Petugas',
+            'is_admin' => 'Admin',
+            'is_direktur' => 'Direktur',
+            'is_manajer' => 'Manajer',
+            'is_petugas' => 'Petugas',
             'login_trial' => 'Login Trial',
         ];
     }
@@ -97,5 +101,15 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function isDirektur(){ return $this->is_direktur; }
     public function isManajerKeuangan(){ return $this->is_manajer; }
     public function isPetugas(){ return $this->is_petugas; }
+
+    /**
+     * @return string
+     */
+    public function getRoleAsString(){
+        if ($this->isAdmin()) return "Admin";
+        else if ($this->isDirektur()) return "Direktur";
+        else if ($this->isManajerKeuangan()) return "Manajer Keuangan";
+        else return "Petugas";
+    }
 
 }
