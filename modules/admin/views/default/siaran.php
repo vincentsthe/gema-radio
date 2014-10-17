@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
         NavBar::begin([
             'options' => [
-                'class' => 'navbar navbar-default',
+                'class' => 'navbar navbar-tabs',
             ],
         ]);
         echo Nav::widget([

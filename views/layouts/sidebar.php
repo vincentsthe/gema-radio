@@ -55,8 +55,8 @@ use yii\widgets\Breadcrumbs;
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
                             ['label' => 'Konfirmasi', 'url' => ['/siaran/index']],
-                            ['label' => 'Transaksi', 'url' => ['/user/index']],
-                            ['label' => 'Ubah', 'url' => ['/transaksi/index']],
+                            ['label' => 'Transaksi', 'url' => ['/manajerkeuangan/transaksi/add']],
+                            ['label' => 'Ubah', 'url' => ['/user/index']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/user/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/user/index']],
@@ -73,7 +73,7 @@ use yii\widgets\Breadcrumbs;
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
                             ['label' => 'Transaksi', 'url' => ['/petugas/transaksi/createnewtransaksi']],
-                            ['label' => 'Ubah Password', 'url' => ['/user/index']],
+                            ['label' => 'Ubah Password', 'url' => ['/petugas/default/changepassword']],
                         ],
                     ]);
                 }
