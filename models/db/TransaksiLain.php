@@ -33,7 +33,7 @@ class TransaksiLain extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'kegiatan', 'jenis_transaksi', 'tanggal', 'nominal', 'terbilang'], 'required'],
+            [['kegiatan', 'jenis_transaksi', 'tanggal', 'nominal', 'terbilang', 'akun_id'], 'required'],
             [['id', 'akun_id', 'nominal'], 'integer'],
             [['jenis_transaksi'], 'string'],
             [['tanggal'], 'safe'],

@@ -33,8 +33,8 @@ class Akun extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'parent', 'harga'], 'required'],
-            [['nama', 'parent', 'harga'], 'integer']
+            [['nama', 'harga', 'kode', 'parent'], 'required'],
+            [['parent', 'harga'], 'integer']
         ];
     }
 
@@ -45,9 +45,10 @@ class Akun extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'nama' => 'Nama',
-            'parent' => 'Parent',
+            'nama' => 'Nama Akun',
+            'parent' => 'Klasifikasi Akun',
             'harga' => 'Harga',
+            'kode' => 'Kode Akun',
         ];
     }
 
@@ -93,5 +94,11 @@ class Akun extends \yii\db\ActiveRecord
             ->groupBy($this->id)
             ->all();
         $this->save();
+    }
+
+    public function queryLeaf() {
+        return Akun::find()
+            ->where('kode IS NOT NULL')
+            ->all();
     }
 }
