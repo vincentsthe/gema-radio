@@ -29,6 +29,7 @@ class LoginForm extends Model
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
             ['password', 'validatePassword'],
+            
         ];
     }
 
@@ -57,7 +58,13 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            if ($this->getUser()->login_trial > 0){
+                $this->resetLoginTrial();
+                return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+            } else {
+                $this->addError('username','Percobaan login sudah habis');
+            }
+            
         } else {
             return false;
         }
@@ -75,5 +82,25 @@ class LoginForm extends Model
         }
 
         return $this->_user;
+    }
+
+
+    public function decreaseLoginTrial(){
+        $user = User::find()->where(['username' => $this->username])->one();
+        if ($user){
+            $user->login_trial--;
+            $user->save();
+        }
+        
+        
+    }
+
+    public function resetLoginTrial() {
+        $user = User::find()->where(['username' => $this->username])->one();
+        if ($user){
+           $user->login_trial = User::DEFAULT_LOGIN_TRIAL;
+            $user->save();
+        }
+    
     }
 }

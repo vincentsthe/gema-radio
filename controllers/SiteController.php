@@ -7,7 +7,7 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\form\LoginForm;
-use app\models\ContactForm;
+use app\models\form\ContactForm;
 use app\models\db\User;
 use app\models\db\Siaran;
 
@@ -82,6 +82,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
+            $model->decreaseLoginTrial();
             return $this->render('login', [
                 'model' => $model,
             ]);

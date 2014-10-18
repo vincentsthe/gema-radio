@@ -15,7 +15,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\db\User',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -34,6 +34,13 @@ $config = [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'logFile' => "@runtime/logs/info.log",
+                    'levels' => ['info'],
+                    'logVars' => [], //NO GET, NO POST, NO PUT, NO PATCH, NO COOKIES etc.
+
                 ],
             ],
         ],

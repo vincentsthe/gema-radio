@@ -19,6 +19,8 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
+    const DEFAULT_LOGIN_TRIAL = 3;
+
     //index role to be converted to is_admin etc
     public $_verify_password;
 
@@ -36,11 +38,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'fullname','_verify_password'], 'required'],
+            [['username', 'password', 'fullname'], 'required'],
             [['is_admin', 'is_direktur', 'is_manajer', 'is_petugas', 'login_trial'], 'integer'],
             [['username', 'password', 'fullname','_verify_password'], 'string', 'max' => 100],
             [['username'], 'unique'],
-            [['_verify_password'], 'compare', 'compareAttribute' => 'password']
+            
+            [['_verify_password'], 'required', 'on'=>'register'],
+            [['_verify_password'], 'compare', 'compareAttribute' => 'password','on'=>'register'],
         ];
     }
 
