@@ -9,8 +9,8 @@
 
 ?>
 
-<?php $form = ActiveForm::begin(['method'=>'get']); ?>
-<?= $form->errorSummary($model); ?>
+<?php $form = ActiveForm::begin(['action'=>['index'],'method'=>'get']); ?>
+
 <?= $form->field($model,'tanggal_awal')->textInput(['id'=>'tanggal_awal']); ?>
 <?= $form->field($model,'tanggal_akhir')->textInput(['id' =>'tanggal_akhir']); ?>
 <?= $form->field($model,'akun_id')->dropDownList(ArrayHelper::map($akuns,'id','nama')); ?>

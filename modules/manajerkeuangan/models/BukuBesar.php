@@ -4,9 +4,10 @@ namespace app\modules\manajerkeuangan\models;
 use Yii;
 
 use yii\base\Model;
-use app\models\db\Transaksi;
+use app\models\db\TransaksiLain;
 use yii\data\ActiveDataProvider;
-class BukuBesar extends Transaksi
+
+class BukuBesar extends TransaksiLain
 {
     public $tanggal_awal; //user id
     public $tanggal_akhir;
@@ -18,7 +19,7 @@ class BukuBesar extends Transaksi
     public function rules()
     {
         return [
-            [['tanggal_awal','tanggal_akhir','akun_id'], 'required'],
+            //[['tanggal_awal','tanggal_akhir','akun_id'], 'required'],
             [['akun_id'], 'integer'],
             [['tanggal_awal','tanggal_akhir'],'date'],
 
@@ -44,7 +45,7 @@ class BukuBesar extends Transaksi
 
     public function search($params)
     {
-        $query = Transaksi::find();
+        $query = TransaksiLain::find();
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

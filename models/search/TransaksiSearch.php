@@ -27,6 +27,7 @@ class TransaksiSearch extends Transaksi
             [['tanggal'],'required','on' => 'edit'],
             //[['tanggal_awal','tanggal_akhir','']]
             ['tanggal_awal','compare','compareAttribute' => 'tanggal_akhir','operator' => '<='],
+            
         ];
     }
 
