@@ -34,7 +34,7 @@ class TransaksiLain extends \yii\db\ActiveRecord
     {
         return [
             [['kegiatan', 'jenis_transaksi', 'tanggal', 'nominal', 'terbilang', 'akun_id'], 'required'],
-            [['id', 'akun_id', 'nominal'], 'integer'],
+            [['akun_id', 'nominal'], 'integer'],
             [['jenis_transaksi'], 'string'],
             [['tanggal'], 'safe'],
             [['kegiatan'], 'string', 'max' => 100],

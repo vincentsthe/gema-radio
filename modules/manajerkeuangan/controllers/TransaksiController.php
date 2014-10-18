@@ -143,6 +143,45 @@ class TransaksiController extends BaseController {
 		]);
 	}
 
+	public function actionListtransaction($date = "") {
+		$listTransaksi = TransaksiLain::find();
+
+		if($date != "") {
+			$listTransaksi = $listTransaksi->where('tanggal="' . $date . '"');
+		}
+		$listTransaksi = $listTransaksi->orderBy(['tanggal' => SORT_ASC])->with('akun');
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => $listTransaksi,
+			'pagination' => [
+				'pageSize' => 15,
+			]
+		]);
+
+		return $this->render('listtransaction', [
+			'date' => $date,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+
+	public function actionUpdate($id) {
+		$model = $this->findModel($id);
+		$akun = Akun::find()->all();
+
+		if((Yii::$app->request->isPost) && ($model->load(Yii::$app->request->post()))) {
+			if($model->save()) {
+				Yii::$app->session->setFlash('success', 'Transaksi berhasil diubah.');
+			} else {
+				Yii::$app->session->setFlash('error', 'Transaksi gagal diubah.');
+			}
+		}
+
+		return $this->render('update', [
+			'model' => $model,
+			'akun' => $akun,
+		]);
+	}
+
 	protected function findModel($id) {
         if (($model = TransaksiLain::findOne($id)) !== null) {
             return $model;
