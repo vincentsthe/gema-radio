@@ -54,7 +54,7 @@ use yii\widgets\Breadcrumbs;
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
-                            ['label' => 'Konfirmasi', 'url' => ['/siaran/index']],
+                            ['label' => 'Konfirmasi', 'url' => ['/manajerkeuangan/transaksi/listunconfirmed']],
                             ['label' => 'Transaksi', 'url' => ['/manajerkeuangan/transaksi/add']],
                             ['label' => 'Ubah', 'url' => ['/user/index']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],

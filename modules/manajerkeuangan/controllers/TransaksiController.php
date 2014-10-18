@@ -2,19 +2,19 @@
 
 namespace app\modules\manajerkeuangan\controllers;
 
-class BukubesarController extends BaseController
-{
-
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
-use yii\data\ActiveDataProvider;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\web\NotFoundHttpException;
 
 use app\models\db\Transaksi;
 use app\models\db\Akun;
 use app\models\db\TransaksiLain;
 use app\modules\manajerkeuangan\models\BukuBesar;
+use app\models\form\ConfirmationForm;
+use app\models\factory\TransaksiLainFactory;
 
 class TransaksiController extends BaseController {
 
@@ -94,12 +94,52 @@ class TransaksiController extends BaseController {
 			}
 			$model = new Akun();
 		}
-		
+
 		$akun = Akun::queryLeaf();
 
 		return $this->render('akun', [
 			'akun' => $akun,
 			'model' => $model,
+		]);
+	}
+
+	public function actionListunconfirmed() {
+		$dataProvider = new ActiveDataProvider([
+			'query' => Transaksi::find()
+						->where('confirmed=0'),
+			'pagination' => [
+				'pageSize' => 10,
+			],
+		]);
+
+		return $this->render('listunconfirmed', [
+			'dataProvider' => $dataProvider,
+		]);
+	}
+
+	public function actionConfirm($id) {
+		$transaksi = Transaksi::findOne($id);
+		$siarans = $transaksi->getSiarans()->all();
+		$confirmationForm = new ConfirmationForm();
+		$akun = Akun::find()->all();
+
+		if((Yii::$app->request->isPost) && ($confirmationForm->load(Yii::$app->request->post()))) {
+			$transaksiLain = TransaksiLainFactory::createTransaksiLainFromConfirmation($transaksi, $confirmationForm);
+			if($transaksiLain->save()) {
+				$transaksi->confirmed = 1;
+				$transaksi->save();
+				Yii::$app->session->setFlash('success', 'Transaksi Berhasil Dikonfirmasi.');
+				return $this->redirect(['listunconfirmed']);
+			} else {
+				Yii::$app->session->setFlash('error', 'Transaksi Gagal Dikonfirmasi.');
+			}
+		}
+
+		return $this->render('confirm', [
+			'transaksi' => $transaksi,
+			'siarans' => $siarans,
+			'akun' => $akun,
+			'confirmationForm' => $confirmationForm,
 		]);
 	}
 
