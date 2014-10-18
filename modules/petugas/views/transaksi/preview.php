@@ -1,7 +1,9 @@
 <?php
 	
 	use yii\helpers\html;
+
 	use app\helpers\TimeHelper;
+	use app\helpers\FormatHelper;
 
 	$this->title = 'Transaksi';
 ?>
@@ -29,7 +31,7 @@
 		<h5>Uang Sebanyak</h5>
 	</div>
 	<div class="col-md-8">
-		<h5><?= $transaksi->nominal; ?></h5>
+		<h5><?= FormatHelper::currency($transaksi->nominal); ?></h5>
 	</div>
 </div>
 
@@ -139,7 +141,7 @@
 		<h5>Uang Sebanyak</h5>
 	</div>
 	<div class="col-md-8">
-		<h5><?= $transaksi->nominal; ?></h5>
+		<h5><?= FormatHelper::currency($transaksi->nominal); ?></h5>
 	</div>
 </div>
 

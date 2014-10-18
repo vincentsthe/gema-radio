@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
+use app\helpers\FormatHelper;
+
 ?>
 
 <h1>Konfirmasi Transaksi</h1>
@@ -26,7 +28,13 @@ use yii\grid\GridView;
 
             'nama',
             'tanggal',
-            'nominal',
+            [
+                'attribute' => 'Nominal',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return FormatHelper::currency($model->nominal);
+                },
+            ],
             'terbilang',
             'jenis_transaksi',
 
