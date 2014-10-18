@@ -4,6 +4,9 @@ namespace app\models\db;
 
 use Yii;
 
+use app\helpers\ConstantHelper;
+use app\models\factory\TabunganHariTuaFactory;
+
 /**
  * This is the model class for table "transaksi_lain".
  *
@@ -64,5 +67,14 @@ class TransaksiLain extends \yii\db\ActiveRecord
     public function getAkun()
     {
         return $this->hasOne(Akun::className(), ['id' => 'akun_id']);
+    }
+
+    public function beforeSave() {
+        if(($this->isNewRecord) && (ConstantHelper::getTabunganHariTuaId() == $this->akun_id)) {
+            $tabungan = TabunganHariTuaFactory::createTabunganHariTuaFromTransaksi($this);
+            $tabungan->save();
+        }
+
+        return parent::beforeSave(true);
     }
 }

@@ -59,7 +59,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Ubah', 'url' => ['/manajerkeuangan/transaksi/listtransaction']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/bukutabungan']],
-                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/bukutabungan']],
+                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/tabungan-hari-tua/listtabungan']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);
