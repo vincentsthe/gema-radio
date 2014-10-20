@@ -1,4 +1,6 @@
 <?php
+    use app\helpers\FormatHelper;
+
     use yii\grid\GridView;
     use yii\helpers\Html;
 ?>
@@ -23,10 +25,12 @@
             foreach($childs as $child){
                 printRecursive($child,$depth+1);
             }
+            $model->updateHarga();
 
-            echo "<tr><td>".spaces($depth)."Total $model->nama</td><td>$model->harga</td></tr>";
+            echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td>" . FormatHelper::currency($model->harga) . "</strong></td></tr>";
         } else {
-            echo "<tr><td>".spaces($depth)."$model->nama</td><td>$model->harga</td></tr>";
+            $model->updateHarga();
+            echo "<tr><td>".spaces($depth)."$model->nama</td><td>" . FormatHelper::currency($model->harga) . "</td></tr>";
         }
     }
 

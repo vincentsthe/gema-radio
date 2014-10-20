@@ -9,6 +9,11 @@ class LaporankeuanganController extends BaseController
 {
     public function actionIndex()
     {
+        $rootAkuns = Akun::find()->where(['parent' => 0])->all();
+        foreach($rootAkuns as $rootAkun) {
+            $rootAkun->updateHarga();
+        }
+
         return $this->render('index',[
         	'rootAkuns' => Akun::find()->where(['parent'=>0])->all()
         ]);

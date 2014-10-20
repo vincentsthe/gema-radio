@@ -90,7 +90,16 @@ class Akun extends \yii\db\ActiveRecord
     public function updateHarga(){
         //if leaf
         if ($this->getChilds()->count() == 0){
-            $this->harga = $this->getTransaksis()->sum('nominal') + $this->getTransaksiLains()->sum('nominal');
+            $debit = $this->getTransaksiLains()->where('jenis_transaksi="debit"')->sum('nominal');
+            $kredit = $this->getTransaksiLains()->where('jenis_transaksi="kredit"')->sum('nominal');
+            if($debit == NULL) {
+                $debit = 0;
+            }
+            if($kredit == NULL) {
+                $kredit = 0;
+            }
+
+            $this->harga = $debit - $kredit;
         } else {
             $this->harga = $this->getChilds()->sum('harga');
         }
