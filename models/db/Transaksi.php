@@ -41,7 +41,7 @@ class Transaksi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'tanggal', 'nominal', 'terbilang', 'teks_spot', 'deskripsi', 'jenis_transaksi'], 'required'],
+            [['nama', 'tanggal', 'nominal', 'terbilang', 'teks_spot', 'deskripsi', 'jenis_transaksi', 'periode_awal', 'periode_akhir'], 'required'],
             [['tanggal'], 'safe'],
             [['no_order', 'nominal', 'jumlah_siaran', 'siaran_per_hari', 'teks_spot', 'akun_id'], 'integer'],
             [['deskripsi', 'jenis_transaksi'], 'string'],

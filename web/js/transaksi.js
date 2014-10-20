@@ -142,6 +142,16 @@ $(document).ready(function() {
 		format:"Y-m-d",
 	});
 
+	$("#tanggalAwal").datetimepicker({
+		timepicker:false,
+		format:"Y-m-d",
+	});
+
+	$("#tanggalAkhir").datetimepicker({
+		timepicker:false,
+		format:"Y-m-d",
+	});
+
 	$("#jumlahSiaran").spinner({
 		min: 0,
 		max: 20,

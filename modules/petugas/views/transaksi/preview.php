@@ -45,6 +45,14 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-md-3 col-md-offset-1">
+		<h5>Periode</h5>
+	</div>
+	<div class="col-md-8">
+		<h5><?= $transaksi->periode_awal . "&nbsp;&nbsp;&nbsp;&nbsp;<strong>-</strong>&nbsp;&nbsp;&nbsp;&nbsp;" . $transaksi->periode_akhir; ?></h5>
+	</div>
+</div>
 
 <div class="row">
 	<div class="col-md-3 col-md-offset-1">
@@ -155,6 +163,14 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-md-3 col-md-offset-1">
+		<h5>Periode</h5>
+	</div>
+	<div class="col-md-8">
+		<h5><?= $transaksi->periode_awal . "&nbsp;&nbsp;&nbsp;&nbsp;<strong>-</strong>&nbsp;&nbsp;&nbsp;&nbsp;" . $transaksi->periode_akhir; ?></h5>
+	</div>
+</div>
 
 <div class="row">
 	<div class="col-md-3 col-md-offset-1">

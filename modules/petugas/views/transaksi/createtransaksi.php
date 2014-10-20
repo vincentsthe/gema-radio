@@ -51,6 +51,18 @@ CreateTransaksiAsset::register($this);
 
 	    <?= $form->field($model, 'terbilang')->textInput(['maxlength' => 300]) ?>
 
+	    <div class="row">
+	    	<div class="col-md-2">
+	    		<h4><span style="font-weight:bold;font-size:14px;margin-bottom:5px;">Periode</span></h4>
+	    	</div>
+	    	<div class="col-md-3">
+	    		<?= $form->field($model, 'periode_awal', ['template'=>"<div class=\"row\"><div class=\"col-md-12\">{input}</div><div class=\"col-md-12\">{error}</div></div>"])->textInput(['id' => 'tanggalAwal']) ?>
+	    	</div>
+	    	<div class="col-md-3">
+	    		<?= $form->field($model, 'periode_akhir', ['template'=>"<div class=\"row\"><div class=\"col-md-12\">{input}</div><div class=\"col-md-12\">{error}</div></div>"])->textInput(['id' => 'tanggalAkhir']) ?>
+	    	</div>
+	    </div>
+
 	    <?= $form->field($model, 'jumlah_siaran', ['template'=>"<div class=\"row\"><div class=\"col-md-2\"><strong>Jumlah</strong></div><div class=\"col-md-2\">{input}</div><div class=\"col-md-8\" style=\"position:relative;top:5px;\"><strong>Siaran</strong></div><div class=\"col-md-offset-2 col-md-10\">{error}</div></div>"])->textInput(['id'=>'jumlahSiaran']) ?>
 
 	    <?= $form->field($model, 'siaran_per_hari', ['template'=>"<div class=\"row\"><div class=\"col-md-2 col-md-offset-2\">{input}</div><div class=\"col-md-8\" style=\"position:relative;top:5px;\">{label}</div><div class=\"col-md-offset-2 col-md-10\">{error}</div></div>"])->textInput(['id'=>'siaranPerHari']) ?>
