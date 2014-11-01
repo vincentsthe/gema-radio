@@ -22,6 +22,8 @@ use app\models\factory\TabunganHariTuaFactory;
  */
 class TransaksiLain extends \yii\db\ActiveRecord
 {
+    const DEBIT = 'debit';
+    const KREDIT = 'kredit';
     /**
      * @inheritdoc
      */
