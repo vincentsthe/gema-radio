@@ -87,11 +87,11 @@ class Akun extends \yii\db\ActiveRecord
     /**
      * update harga hanya berdasarkan anak2nya tepat di bawahnya/transaksi
      */
-    public function updateHarga(){
+    public function updateHarga($tanggal_awal,$tanggal_akhir){
         //if leaf
         if ($this->getChilds()->count() == 0){
-            $debit = $this->getTransaksiLains()->where('jenis_transaksi="debit"')->sum('nominal');
-            $kredit = $this->getTransaksiLains()->where('jenis_transaksi="kredit"')->sum('nominal');
+            $debit = $this->getTransaksiLains()->andWhere('jenis_transaksi="debit"')->andWhere(['between','tanggal',$tanggal_awal,$tanggal_akhir])->sum('nominal');
+            $kredit = $this->getTransaksiLains()->andWhere('jenis_transaksi="kredit"')->andWhere(['between','tanggal',$tanggal_awal,$tanggal_akhir])->sum('nominal');
             if($debit == NULL) {
                 $debit = 0;
             }

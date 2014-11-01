@@ -4,11 +4,19 @@ namespace app\modules\manajerkeuangan\controllers;
 
 use yii\web\Controller;
 use app\models\db\Akun;
+use app\modules\manajerkeuangan\models\form\LaporanKeuanganForm;
+
 
 class LaporankeuanganController extends BaseController
 {
     public function actionIndex($jenis = 'neraca')
     {
+        $searchModel = new LaporanKeuanganForm;
+        $searchModel->tanggal_awal = '2014-01-01';
+        $searchModel->tanggal_akhir = '2014-01-01';
+        if ($searchModel->load(\Yii::$app->request->get()) && $searchModel->validate()) {
+        }
+
         if ($jenis == 'neraca'){
             $rootAkuns = Akun::findNeraca()->all();
         } else {
@@ -16,18 +24,19 @@ class LaporankeuanganController extends BaseController
         }
 
         foreach($rootAkuns as $rootAkun) {
-            $rootAkun->updateHarga();
+            $rootAkun->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
         }
-
         return $this->render('index',[
-        	'rootAkuns' => $rootAkuns,
-        ]);
+         	'rootAkuns' => $rootAkuns,
+             'searchModel' => $searchModel,
+             'jenis' => $jenis
+         ]);
     }
 
     public function actionUpdate()
     {
     	Akun::updateAllHarga();
-    	//return $this->redirect('index');
+    	return $this->redirect('index');
     }
 
 }

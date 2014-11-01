@@ -14,11 +14,12 @@
     ]);
 ?>
 <br>
+<?=$this->render('_search',['model'=>$searchModel,'jenis'=>$jenis]); ?>
 <?=Html::a('Update laporan','update',['class'=>'btn btn-warning']); ?><br><br><br>
 <div class="col-xs-8">
 <table class="table table-striped table-condensed">
     <tr><th>Keterangan</th><th>Debit</th><th>Kredit</th></tr>
-    <?php foreach($rootAkuns as $rootakun) printRecursive($rootakun,0); ?>
+    <?php foreach($rootAkuns as $rootakun) printRecursive($rootakun,0,$searchModel); ?>
 </table>
 </div>
 
@@ -26,7 +27,7 @@
     /**
      * @param Akun $model
      */
-    function printRecursive($model,$depth){
+    function printRecursive($model,$depth,&$searchModel){
         $childs = $model->getChilds()->all();
         $debit = null; $kredit = null;
 
@@ -34,15 +35,15 @@
             echo "<tr><td>".spaces($depth)."$model->nama</td><td></td><td></td></tr>";
 
             foreach($childs as $child){
-                printRecursive($child,$depth+1);
+                printRecursive($child,$depth+1,$searchModel);
             }
-            $model->updateHarga();
+            $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
             
             if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
             echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td>".FormatHelper::currency($debit)."</td><td>".FormatHelper::currency($kredit)."</strong></td></tr>";
         } else {
-            $model->updateHarga();
-            
+            $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
+
             if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
             echo "<tr><td>".spaces($depth)."$model->nama</td><td>" . FormatHelper::currency($debit) . "</td><td>" . FormatHelper::currency($kredit) . "</td></tr>";
         }
