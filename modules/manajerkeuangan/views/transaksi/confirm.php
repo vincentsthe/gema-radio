@@ -108,14 +108,6 @@
 				<h5>kali/hari</h5>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-2">
-				<h5><?= $transaksi->teks_spot ?></h5>
-			</div>
-			<div class="col-md-10">
-				<h5>teks spot</h5>
-			</div>
-		</div>
 	</div>
 </div>
 

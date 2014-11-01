@@ -6,7 +6,7 @@ use app\assets\TimePickerAsset;
 use app\assets\CreateTransaksiAsset;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\db\Transaksi */
+/* @var $model app\models\Form\TransaksiForm */
 
 $this->title = 'Create Transaksi';
 $this->params['breadcrumbs'][] = ['label' => 'Transaksis', 'url' => ['index']];
@@ -34,6 +34,7 @@ CreateTransaksiAsset::register($this);
 
 	    <?php $form = ActiveForm::begin([
 	    	'id' => 'form',
+	    	'enableAjaxValidation' => false,
 	    	'fieldConfig' => [
 	        	'template' => "<div class=\"row\"><div class=\"col-md-2\">{label}</div>\n<div class=\"col-md-8\">{input}</div>\n<div class=\"col-md-offset-2 col-md-10\">{error}</div></div>",
 	        	],
@@ -66,8 +67,6 @@ CreateTransaksiAsset::register($this);
 	    <?= $form->field($model, 'jumlah_siaran', ['template'=>"<div class=\"row\"><div class=\"col-md-2\"><strong>Jumlah</strong></div><div class=\"col-md-2\">{input}</div><div class=\"col-md-8\" style=\"position:relative;top:5px;\"><strong>Siaran</strong></div><div class=\"col-md-offset-2 col-md-10\">{error}</div></div>"])->textInput(['id'=>'jumlahSiaran']) ?>
 
 	    <?= $form->field($model, 'siaran_per_hari', ['template'=>"<div class=\"row\"><div class=\"col-md-2 col-md-offset-2\">{input}</div><div class=\"col-md-8\" style=\"position:relative;top:5px;\">{label}</div><div class=\"col-md-offset-2 col-md-10\">{error}</div></div>"])->textInput(['id'=>'siaranPerHari']) ?>
-
-	    <?= $form->field($model, 'teks_spot', ['template'=>"<div class=\"row\"><div class=\"col-md-2 col-md-offset-2\">{input}</div><div class=\"col-md-8\" style=\"position:relative;top:5px;\">{label}</div><div class=\"col-md-offset-2 col-md-10\">{error}</div></div>"])->textInput() ?>
 
 	    <div class="plain-box">
 	    	<ul class="nav nav-tabs" role="tablist" id="tab">

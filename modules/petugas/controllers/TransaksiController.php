@@ -6,6 +6,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\Session;
 use app\models\db\Transaksi;
+use app\models\form\TransaksiForm;
 use app\models\factory\SiaranFactory;
 
 class TransaksiController extends BaseController {
@@ -42,10 +43,10 @@ class TransaksiController extends BaseController {
 			$model->akun_id = 1;
 
 			if($model->validate()) {
-				$siarans = Yii::$app->request->post('Siaran');
+/*				$siarans = Yii::$app->request->post('Siaran');
 
-				$session->set('transaksi', $model);
-				$session->set('siaran', $siarans);
+				$session->set('transaksiForm', $model);
+				$session->set('siaran', $siarans); */ //TODO
 
 				return $this->redirect('preview', 302);
 			} else {
@@ -62,7 +63,7 @@ class TransaksiController extends BaseController {
 		$session = new Session;
 		$session->open();
 
-		$transaksi = $session->get('transaksi');
+		$transaksiForm = $session->get('transaksiForm');
 		$siarans = $session->get('siaran');
 
 		return $this->render('preview', [
@@ -71,6 +72,7 @@ class TransaksiController extends BaseController {
 		]);
 	}
 
+	//TODO: not yet adapt transaksiForm (still Transaksi Model now)
 	public function actionSave() {
 		$session = new Session;
 		$session->open();
@@ -91,6 +93,7 @@ class TransaksiController extends BaseController {
 		return $this->redirect('print', 302);
 	}
 
+	//TODO: same above
 	public function actionPrint() {
 		$session = new Session;
 		$session->open();

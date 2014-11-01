@@ -16,14 +16,11 @@ use Yii;
  * @property string $terbilang
  * @property integer $jumlah_siaran
  * @property integer $siaran_per_hari
- * @property integer $teks_spot
  * @property string $deskripsi
  * @property string $jenis_transaksi
- * @property integer $akun_id
  *
  * @property Rekaman[] $rekamen
  * @property Siaran[] $siarans
- * @property Akun $akun
  */
 class Transaksi extends \yii\db\ActiveRecord
 {
@@ -41,10 +38,34 @@ class Transaksi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nama', 'tanggal', 'nominal', 'terbilang', 'teks_spot', 'deskripsi', 'jenis_transaksi', 'periode_awal', 'periode_akhir'], 'required'],
+            ['siaran_per_hari', 'required',
+                'when' => function($model) {
+                    return $model->jenis_siaran == "periodik";
+                },
+                'whenClient' => 'function(attribute, value) {
+                    return ($("#jenis_siaran").val == "periodik");
+                }'
+            ],
+            ['interval', 'required',
+                'when' => function($model) {
+                    return $model->jenis_siaran == "periodik";
+                },
+                'whenClient' => 'function(attribute, value) {
+             		return ($("#jenis_siaran").val == "periodik");
+                }'
+         	],
+            ['jumlah_siaran', 'required',
+            	'when' => function($model) {
+            		return $model->jenis_siaran == "per_siaran";
+            	},
+            	'whenClient' => 'function(attribute, value) {
+                	return ($("#jenis_siaran").val == "per_siaran");
+            	}'
+            ],
+            [['nama', 'tanggal', 'nominal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'jenis_periode'], 'required'],
+            [['nama', 'tanggal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'periode_awal', 'periode_akhir', 'no_order'], 'string'],
+            [['siaran_per_hari', 'jumlah_siaran', 'interval'], 'integer'],
             [['tanggal'], 'safe'],
-            [['no_order', 'nominal', 'jumlah_siaran', 'siaran_per_hari', 'teks_spot', 'akun_id'], 'integer'],
-            [['deskripsi', 'jenis_transaksi'], 'string'],
             [['nama', 'produk'], 'string', 'max' => 100],
             [['terbilang'], 'string', 'max' => 300]
         ];
@@ -65,10 +86,8 @@ class Transaksi extends \yii\db\ActiveRecord
             'terbilang' => 'Terbilang',
             'jumlah_siaran' => 'Jumlah Siaran',
             'siaran_per_hari' => 'Siaran Per Hari',
-            'teks_spot' => 'Teks Spot',
             'deskripsi' => 'Deskripsi',
             'jenis_transaksi' => 'Jenis Transaksi',
-            'akun_id' => 'Akun ID',
         ];
     }
 
@@ -87,60 +106,4 @@ class Transaksi extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Siaran::className(), ['transaksi_id' => 'id']);
     }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getParent()
-    {
-        return $this->hasOne(Akun::className(), ['id' => 'parent']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getChilds()
-    {
-        return $this->hasMany(Akun::className(),['parent' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTransaksis(){
-        return $this->hasMany(Transaksi::className(),['id'=>'akun_id']);
-    }
-    
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTransaksiLains(){
-       return $this->hasMany(TransaksiLain::className(), ['akun_id' => 'id']);
-    }
-
-    /**
-     * @var int $akun_id id akun
-     * @var time $tanggal_mulai
-     * @var time $tanggal_selesai
-     */
-    public static function queryBukuBesar($akun_id,$tanggal_mulai,$tanggal_selesai){
-        return self::find()
-            ->where(['akun_id' => $akun_id])
-            ->where(['between','tanggal',$tanggal_mulai,$tanggal_selesai])
-            ->orderBy(['id']);
-    }
-
-    /**
-     * @var int $akun_id
-     * @return ActiveQuery
-     */
-    public static function queryAkun($akun_id){
-        return self::find()
-            ->where(['akun_id' => $akun_id])
-            ->groupBy($akun_id);
-    }
-
-    
-
-
 }

@@ -110,6 +110,12 @@ class Akun extends \yii\db\ActiveRecord
         
     }
 
+    public function queryLeaf() {
+        return Akun::find()
+            ->where('kode IS NOT NULL')
+            ->all();
+    }
+
     /**
      * update harga dengan anak2nya ikut diupdate
      */
