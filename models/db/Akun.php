@@ -137,4 +137,11 @@ class Akun extends \yii\db\ActiveRecord
         }
     }
 
+    public static function findNeraca(){
+        return self::find()->andWhere(['in','nama',['Aktiva','Pasiva','Modal']]);
+    }
+
+    public static function findLabaRugi(){
+        return self::find()->andWhere(['not in','nama',['Aktiva','Pasiva','Modal']]);
+    }
 }

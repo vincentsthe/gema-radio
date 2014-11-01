@@ -7,15 +7,20 @@ use app\models\db\Akun;
 
 class LaporankeuanganController extends BaseController
 {
-    public function actionIndex()
+    public function actionIndex($jenis = 'neraca')
     {
-        $rootAkuns = Akun::find()->where(['parent' => 0])->all();
+        if ($jenis == 'neraca'){
+            $rootAkuns = Akun::findNeraca()->all();
+        } else {
+            $rootAkuns = Akun::findLabaRugi()->andWhere(['parent' => 0])->all();
+        }
+
         foreach($rootAkuns as $rootAkun) {
             $rootAkun->updateHarga();
         }
 
         return $this->render('index',[
-        	'rootAkuns' => Akun::find()->where(['parent'=>0])->all()
+        	'rootAkuns' => $rootAkuns,
         ]);
     }
 
