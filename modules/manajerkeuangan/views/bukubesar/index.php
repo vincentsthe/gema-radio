@@ -7,7 +7,7 @@
 <?= $this->render('_search',['model'=>$model,'akuns' => $akuns]); ?><br>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
-    <tr><td>Saldo awal: (<?=$model->tanggal_awal?>) </td><td><?=$debet;?></td><td><?=$kredit;?></td></tr>
+    <tr><td>Keadaan awal: (<?=$model->tanggal_awal?>) </td><td><?=$debet;?></td><td><?=$kredit;?></td></tr>
 </table>
 </div>
 <?=GridView::widget([
@@ -38,6 +38,9 @@
         ]
     ],
 ]);
+?>
+<?php
+    if ($debet > $kredit) {$debet -= $kredit; $kredit = 0; } else {$kredit -= $debet; $debet = 0;}
 ?>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
