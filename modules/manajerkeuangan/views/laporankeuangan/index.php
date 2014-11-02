@@ -40,12 +40,12 @@
             $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
             
             if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
-            echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td>".FormatHelper::currency($debit)."</td><td>".FormatHelper::currency($kredit)."</strong></td></tr>";
+            echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td><span class='pull-right'>".FormatHelper::currency($debit)."</span></td><td><span class='pull-right'>".FormatHelper::currency($kredit)."</span></strong></td></tr>";
         } else {
             $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
 
             if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
-            echo "<tr><td>".spaces($depth)."$model->nama</td><td>" . FormatHelper::currency($debit) . "</td><td>" . FormatHelper::currency($kredit) . "</td></tr>";
+            echo "<tr><td>".spaces($depth)."$model->nama</td><td><span class='pull-right'>" . FormatHelper::currency($debit) . "</span></td><td><span class='pull-right'>" . FormatHelper::currency($kredit) . "</span></td></tr>";
         }
     }
 

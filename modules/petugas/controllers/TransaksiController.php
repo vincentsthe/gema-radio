@@ -18,7 +18,7 @@ class TransaksiController extends BaseController {
 		$transaksi = new Transaksi();
 		$session->set('transaksi', $transaksi);
 		$session->set('siaran', []);
-
+		$session->close();
 		return $this->redirect('createtransaksi', 302);
 	}
 
@@ -26,10 +26,10 @@ class TransaksiController extends BaseController {
 		$session = new Session;
 		$session->open();
 
-		if($session->get('transaksi', NULL) == NULL) {
+		if($session->get('transaksi') === NULL) {
 			return $this->redirect('createnewtransaksi', 302);
 		}
-
+		
 		if($request == 'siaran') {
 			$siaran = $session->get('siaran');
 			Yii::$app->response->format = 'json';
