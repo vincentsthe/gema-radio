@@ -22,8 +22,13 @@ class TimeHelper {
 	 * @param int $timestamp 	timestamp to be converted
 	 * @return string			Formatted date
 	 */
-	public static function timestampToFormattedDate($timestamp, $format = "d-m-Y G:i") {
+	public static function timestampToFormattedDate($timestamp, $format = "d-m-Y H:i") {
 		return date($format, $timestamp);
+	}
+
+	public static function getBeginningHourTime() {
+		$timestamp = time()-60 - ((time()-60) % 3600);
+		return self::timestampToFormattedDate($timestamp, "H:i:s");
 	}
 
 	public static function getDay($formattedDate, $format) {

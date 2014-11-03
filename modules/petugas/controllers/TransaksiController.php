@@ -7,6 +7,7 @@ use yii\web\Controller;
 use yii\web\Session;
 use app\models\db\Transaksi;
 use app\models\form\TransaksiForm;
+use app\models\factory\RekamanFactory;
 use app\models\factory\SiaranFactory;
 
 class TransaksiController extends BaseController {
@@ -82,8 +83,14 @@ class TransaksiController extends BaseController {
 
 		if($transaksi->save()) {
 			foreach($siarans as $siaran) {
-				$siaran = SiaranFactory::createSiaranFromInput($siaran['tanggal'], $siaran['jamMulai'] . ":00", $siaran['jamSelesai'] . ":00", $transaksi->id);
-				$siaran->save();
+				if($transaksi->haveSiaran()) {
+					$siaran = SiaranFactory::createSiaranFromInput($siaran['tanggal'], $siaran['waktu'] . ":00", $transaksi->id);
+					$siaran->save();
+				}
+				if($transaksi->haveRekaman()) {
+					$rekaman = RekamanFactory::createRekamanFromInput($siaran['tanggal'], $siaran['waktu'] . ":00", $transaksi->id);
+					$rekaman->save();
+				}
 			}
 			Yii::$app->session->setFlash('success', 'Transaksi berhasil disimpan.');
 		} else {

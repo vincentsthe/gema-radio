@@ -24,86 +24,99 @@ use Yii;
  */
 class Transaksi extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'transaksi';
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'transaksi';
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            ['siaran_per_hari', 'required',
-                'when' => function($model) {
-                    return $model->jenis_siaran == "periodik";
-                },
-                'whenClient' => 'function(attribute, value) {
-                    return ($("#jenis_siaran").val == "periodik");
-                }'
-            ],
-            ['interval', 'required',
-                'when' => function($model) {
-                    return $model->jenis_siaran == "periodik";
-                },
-                'whenClient' => 'function(attribute, value) {
-             		return ($("#jenis_siaran").val == "periodik");
-                }'
-         	],
-            ['jumlah_siaran', 'required',
-            	'when' => function($model) {
-            		return $model->jenis_siaran == "per_siaran";
-            	},
-            	'whenClient' => 'function(attribute, value) {
-                	return ($("#jenis_siaran").val == "per_siaran");
-            	}'
-            ],
-            [['nama', 'tanggal', 'nominal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'jenis_periode'], 'required'],
-            [['nama', 'tanggal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'periode_awal', 'periode_akhir', 'no_order'], 'string'],
-            [['siaran_per_hari', 'jumlah_siaran', 'interval'], 'integer'],
-            [['tanggal'], 'safe'],
-            [['nama', 'produk'], 'string', 'max' => 100],
-            [['terbilang'], 'string', 'max' => 300]
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			['siaran_per_hari', 'required',
+				'when' => function($model) {
+					return $model->jenis_siaran == "periodik";
+				},
+				'whenClient' => 'function(attribute, value) {
+					return ($("#jenis_siaran").val == "periodik");
+				}'
+			],
+			['interval', 'required',
+				'when' => function($model) {
+					return $model->jenis_siaran == "periodik";
+				},
+				'whenClient' => 'function(attribute, value) {
+					return ($("#jenis_siaran").val == "periodik");
+				}'
+			],
+			['jumlah_siaran', 'required',
+				'when' => function($model) {
+					return $model->jenis_siaran == "per_siaran";
+				},
+				'whenClient' => 'function(attribute, value) {
+					return ($("#jenis_siaran").val == "per_siaran");
+				}'
+			],
+			[['nama', 'tanggal', 'nominal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'jenis_periode'], 'required'],
+			[['nama', 'tanggal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'periode_awal', 'periode_akhir', 'no_order'], 'string'],
+			[['siaran_per_hari', 'jumlah_siaran', 'interval'], 'integer'],
+			[['tanggal'], 'safe'],
+			[['nama', 'produk'], 'string', 'max' => 100],
+			[['terbilang'], 'string', 'max' => 300]
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'nama' => 'Nama',
-            'tanggal' => 'Tanggal',
-            'no_order' => 'No Order',
-            'produk' => 'Produk',
-            'nominal' => 'Nominal',
-            'terbilang' => 'Terbilang',
-            'jumlah_siaran' => 'Jumlah Siaran',
-            'siaran_per_hari' => 'Siaran Per Hari',
-            'deskripsi' => 'Deskripsi',
-            'jenis_transaksi' => 'Jenis Transaksi',
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'id' => 'ID',
+			'nama' => 'Nama',
+			'tanggal' => 'Tanggal',
+			'no_order' => 'No Order',
+			'produk' => 'Produk',
+			'nominal' => 'Nominal',
+			'terbilang' => 'Terbilang',
+			'jumlah_siaran' => 'Jumlah Siaran',
+			'siaran_per_hari' => 'Siaran Per Hari',
+			'deskripsi' => 'Deskripsi',
+			'jenis_transaksi' => 'Jenis Transaksi',
+		];
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getRekaman()
-    {
-        return $this->hasMany(Rekaman::className(), ['transaksi_id' => 'id']);
-    }
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getRekaman()
+	{
+		return $this->hasMany(Rekaman::className(), ['transaksi_id' => 'id']);
+	}
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getSiarans()
-    {
-        return $this->hasMany(Siaran::className(), ['transaksi_id' => 'id']);
-    }
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getSiarans()
+	{
+		return $this->hasMany(Siaran::className(), ['transaksi_id' => 'id']);
+	}
+
+	public function haveSiaran() {
+		return (($this->jenis_transaksi == "berita_kehilangan")
+				|| ($this->jenis_transaksi == "iklan_nasional")
+				|| ($this->jenis_transaksi == "iklan_lokal")
+				|| ($this->jenis_transaksi == pengumuman));
+	}
+
+	public function haveRekaman() {
+		return (($this->jenis_transaksi == "rekaman")
+				|| ($this->jenis_transaksi == "iklan_lokal")
+				|| ($this->jenis_transaksi == "iklan_nasional" ));
+	}
 }

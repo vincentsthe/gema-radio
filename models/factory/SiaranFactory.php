@@ -6,11 +6,10 @@ use app\models\db\Siaran;
 
 class SiaranFactory {
 
-	public function createSiaranFromInput($tanggal, $waktuMulai, $waktuSelesai, $transaksiId) {
+	public function createSiaranFromInput($tanggal, $waktu, $transaksiId) {
 		$siaran = new Siaran();
 		$siaran->tanggal = $tanggal;
-		$siaran->waktu_mulai = $waktuMulai;
-		$siaran->waktu_selesai = $waktuSelesai;
+		$siaran->waktu = $waktu;
 		$siaran->transaksi_id = $transaksiId;
 
 		return $siaran;

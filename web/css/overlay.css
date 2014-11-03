@@ -1,0 +1,50 @@
+#overlay {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: auto;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#notif-box {
+	margin: 0 auto;
+	position: relative;
+	top: 100px;
+	width: 800px;
+	background-color: #F6F6F6;
+	border: 4px solid black;
+	padding: 30px;
+	text-align: center;
+}
+
+#notif-content {
+	background-color: #FFF;
+	padding: 20px;
+	color: #000;
+	font-size: 3em;
+	text-align: center;
+	border: 1px solid #CCC;
+}
+
+#notif-button {
+	margin-top: 10px;
+	min-width: 100px;
+	background-color: #ff7f0e;
+}
+
+#notif-text {
+	background-color: #FFF;
+	padding: 20px;
+	color: #000;
+	font-size: .9em;
+	text-align: left;
+	border: 1px solid #CCC;
+	max-height: 350px;
+	overflow-y: scroll;
+}
+#notif-text div {
+	text-align: center;
+}

@@ -5,6 +5,7 @@ namespace app\modules\adminradio\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use app\helpers\TimeHelper;
 use app\models\db\Siaran;
 use app\models\db\Rekaman;
 use yii\data\ActiveDataProvider;
@@ -40,45 +41,86 @@ class NotifikasiController extends BaseController
 		],parent::behaviors());
 	}
 	/**
-	 * @param int $duration in minutes. default to 24 hours.
 	 */
-    public function actionSiaran($duration = null)
+    public function actionSiaran()
     {
-    	if ($duration !== null){
-    		$this->_session[DURATION_SESSION_KEY] = $duration;
-    	} else {
-    		$duration = $this->_session[DURATION_SESSION_KEY];
+    	if(Yii::$app->request->isPost) {
+    		Yii::$app->response->format = 'json';
+
+    		if(Yii::$app->request->post('request') == "deskripsi") {
+    			$id = Yii::$app->request->post('id');
+    			return Siaran::findOne($id)->transaksi->deskripsi;
+    		} else if(Yii::$app->request->post('request') == "change") {
+    			$id = Yii::$app->request->post('id');
+    			$siaran = Siaran::findOne($id);
+    			$siaran->checked = Yii::$app->request->post('checked');
+    			$siaran->save();
+    			return "success";
+    		} else if(Yii::$app->request->post('request') == "status") {
+    			$id = Yii::$app->request->post('id');
+    			return Siaran::findOne($id)->checked;
+    		} else if(Yii::$app->request->post('request') == "jam") {
+    			$jam = (int)substr(TimeHelper::getBeginningHourTime(), 0, 2);
+    			return $jam;
+    		}
     	}
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => Siaran::queryToday($this->_session[DURATION_SESSION_KEY]),
-        ]);
+        $listSiaran = Siaran::queryToday()->all();
+
+        $list = array();
+        for($i=(int)substr(TimeHelper::getBeginningHourTime(), 0, 2) ; $i<=23 ; $i++) {
+        	$list[$i] = array();
+        }
+
+        foreach($listSiaran as $siaran) {
+        	$list[(int)substr($siaran->waktu, 0, 2)][] = $siaran;
+        }
 
         return $this->render('siaran', [
-            'dataProvider' => $dataProvider,
-            'duration' => $duration
+            'list' => $list,
         ]);
     }
 
     /**
-	 * @param int $duration in minutes. default to 24 hours.
 	 */
-    public function actionRekaman($duration = null)
+    public function actionRekaman()
     {
-    	if ($duration !== null){
-    		$this->_session[DURATION_SESSION_KEY] = $duration;
-    	} else {
-    		$duration = $this->_session[DURATION_SESSION_KEY];
+
+    	if(Yii::$app->request->isPost) {
+    		Yii::$app->response->format = 'json';
+
+    		if(Yii::$app->request->post('request') == "deskripsi") {
+    			$id = Yii::$app->request->post('id');
+    			return Rekaman::findOne($id)->transaksi->deskripsi;
+    		} else if(Yii::$app->request->post('request') == "change") {
+    			$id = Yii::$app->request->post('id');
+    			$siaran = Rekaman::findOne($id);
+    			$siaran->checked = Yii::$app->request->post('checked');
+    			$siaran->save();
+    			return "success";
+    		} else if(Yii::$app->request->post('request') == "status") {
+    			$id = Yii::$app->request->post('id');
+    			return Rekaman::findOne($id)->checked;
+    		} else if(Yii::$app->request->post('request') == "jam") {
+    			$jam = (int)substr(TimeHelper::getBeginningHourTime(), 0, 2);
+    			return $jam;
+    		}
     	}
 
-    	$dataProvider = new ActiveDataProvider([
-    		'query' => Rekaman::queryToday($this->_session[DURATION_SESSION_KEY])
-    	]);
+        $listRekaman = Rekaman::queryToday()->all();
 
-    	return $this->render('rekaman',[
-    		'dataProvider' => $dataProvider,
-    		'duration' => $duration
-    	]);
+        $list = array();
+        for($i=(int)substr(TimeHelper::getBeginningHourTime(), 0, 2) ; $i<=23 ; $i++) {
+        	$list[$i] = array();
+        }
+
+        foreach($listRekaman as $rekaman) {
+        	$list[(int)substr($rekaman->waktu, 0, 2)][] = $rekaman;
+        }
+
+        return $this->render('rekaman', [
+            'list' => $list,
+        ]);
     }
 
     public function beforeAction($action)

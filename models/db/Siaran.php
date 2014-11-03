@@ -3,6 +3,7 @@
 namespace app\models\db;
 
 use Yii;
+use app\helpers\TimeHelper;
 
 /**
  * This is the model class for table "siaran".
@@ -31,8 +32,8 @@ class Siaran extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tanggal', 'transaksi_id', 'waktu_mulai', 'waktu_selesai'], 'required'],
-            [['tanggal', 'waktu_mulai', 'waktu_selesai'], 'safe'],
+            [['tanggal', 'transaksi_id', 'waktu'], 'required'],
+            [['tanggal', 'waktu'], 'safe'],
             [['transaksi_id'], 'integer']
         ];
     }
@@ -46,8 +47,7 @@ class Siaran extends \yii\db\ActiveRecord
             'id' => 'ID',
             'tanggal' => 'tanggal',
             'transaksi_id' => 'Transaksi ID',
-            'waktu_mulai' => 'Waktu Mulai',
-            'waktu_selesai' => 'Waktu Selesai',
+            'waktu' => 'Waktu',
         ];
     }
 
@@ -63,17 +63,15 @@ class Siaran extends \yii\db\ActiveRecord
      * @var int $duration duration of time in minutes
      * @return ActiveQuery Instance
      */
-    public static function queryToday($durations)
+    public static function queryToday()
     {
         $currentDate = date('Y-m-d');
-        $currentTime = date('h:i:s');
+        $currentTime = TimeHelper::getBeginningHourTime();
         return self::find()
-            ->with(['transaksi' => function($query) {
-                $query->select(['deskripsi']);
-            }])
-            ->where("`waktu_mulai`>= ".($currentTime + $durations))
-            ->where("`tanggal` = '".$currentDate."'")
-            ->orderBy(['transaksi_id' => SORT_ASC]);
+            ->with(['transaksi'])
+            ->where("`waktu` >= '".($currentTime)."'")
+            ->andWhere("`tanggal` = '".$currentDate."'")
+            ->orderBy(['waktu' => SORT_ASC]);
     }
 
 
