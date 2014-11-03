@@ -1,13 +1,14 @@
 <?php
     use yii\grid\GridView;
     use yii\helpers\Html;
+    use app\helpers\FormatHelper;
 ?>
 <h2>Buku Besar</h2>
 <br>
 <?= $this->render('_search',['model'=>$model,'akuns' => $akuns]); ?><br>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
-    <tr><td>Keadaan awal: (<?=$model->tanggal_awal?>) </td><td><?=$debet;?></td><td><?=$kredit;?></td></tr>
+    <tr><td>Keadaan awal: (<?=$model->tanggal_awal?>) </td><td><?=FormatHelper::currency($debet);?></td><td><?=FormatHelper::currency($kredit);?></td></tr>
 </table>
 </div>
 <?=GridView::widget([
@@ -23,9 +24,9 @@
             'value' => function($model,$key,$index,$column) use(&$debet){
                 $value = ($model->nominal >= 0)?$model->nominal:' ';
                 $debet += $value;
-                return $value;
-
-            }
+                return "<span class='pull-right'>".FormatHelper::currency($value)."</span>";
+            },
+            'format' => 'html',
         ],
         [
             'class' => 'yii\grid\DataColumn',
@@ -33,8 +34,9 @@
             'value' => function($model,$key,$index,$column) use(&$kredit){
                 $value =  ($model->nominal < 0)?-$model->nominal:' ';
                 $kredit += $value;
-                return $value;
-            }
+                return "<span class='pull-right'>".FormatHelper::currency($value)."</span>";
+            },
+            'format' => 'html',
         ]
     ],
 ]);
@@ -44,6 +46,6 @@
 ?>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
-    <tr><td>Saldo Akhir (<?=$model->tanggal_akhir?>)</td><td><?=$debet;?></td><td><?=$kredit;?></td></tr>
+    <tr><td>Saldo Akhir (<?=$model->tanggal_akhir?>)</td><td><?=FormatHelper::currency($debet);?></td><td><?=FormatHelper::currency($kredit);?></td></tr>
 </table>
 </div>
