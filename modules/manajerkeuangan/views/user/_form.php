@@ -10,7 +10,6 @@ use yii\widgets\ActiveForm;
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(['enableClientValidation' => true]); ?>
-
     <?= $form->field($model, 'username')->textInput(['maxlength' => 100]) ?>
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => 100]) ?>

@@ -24,6 +24,13 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     //index role to be converted to is_admin etc
     public $_verify_password;
 
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios['register'] = ['_verify_password', 'password','username','fullname'];
+        return $scenarios;
+    }
+
     /**
      * @inheritdoc
      */

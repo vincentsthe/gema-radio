@@ -24,7 +24,7 @@ class UserController extends BaseController
      */
     public function actionCreate()
     {
-        $model = new User('register');
+        $model = new User(['scenario' => 'register']);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             $this->redirect(['index']);
         }
