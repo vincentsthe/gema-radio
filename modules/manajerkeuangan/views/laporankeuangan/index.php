@@ -15,7 +15,7 @@
 ?>
 <br>
 <?=$this->render('_search',['model'=>$searchModel,'jenis'=>$jenis]); ?>
-<?=Html::a('Update laporan','update',['class'=>'btn btn-warning']); ?><br><br><br>
+<?php //Html::a('Update laporan','update',['class'=>'btn btn-warning']); ?><br><br><br>
 <div class="col-xs-8">
 <table class="table table-striped table-condensed">
     <tr><th>Keterangan</th><th>Debit</th><th>Kredit</th></tr>
