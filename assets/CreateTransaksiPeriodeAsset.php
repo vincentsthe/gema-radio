@@ -13,14 +13,14 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class CreateTransaksiAsset extends AssetBundle
+class CreateTransaksiPeriodeAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $css = [
     ];
     public $js = [
-        'js/transaksi.js'
+        'js/transaksiPeriode.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

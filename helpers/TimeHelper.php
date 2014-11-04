@@ -31,6 +31,19 @@ class TimeHelper {
 		return self::timestampToFormattedDate($timestamp, "H:i:s");
 	}
 
+	public static function getTomorrowDate($date) {
+		$timestamp = self::formattedDateToTimestamp($date, "%Y-%m-%d");
+		$timestamp += 24*60*60;
+		return self::timestampToFormattedDate($timestamp, "Y-m-d");
+	}
+
+	public static function compareFirstDate($date1, $date2) {
+		$timestamp1 = self::formattedDateToTimestamp($date1 . " 00:00:00", "%Y-%m-%d %H:%M:%S");
+		$timestamp2 = self::formattedDateToTimestamp($date2 . " 00:00:00", "%Y-%m-%d %H:%M:%S");
+
+		return ($timestamp1<=$timestamp2);
+	}
+
 	public static function getDay($formattedDate, $format) {
 		$day = self::timestampToFormattedDate(self::formattedDateToTimestamp($formattedDate, $format), "D");
 

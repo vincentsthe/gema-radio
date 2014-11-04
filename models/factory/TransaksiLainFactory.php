@@ -14,8 +14,8 @@ class TransaksiLainFactory {
 		$transaksiLain->akun_id = $confirmationForm->akun_id;
 		$transaksiLain->jenis_transaksi = $confirmationForm->jenis_transaksi;
 		$transaksiLain->tanggal = $transaksi->tanggal;
-		$transaksiLain->nominal = $transaksi->nominal;
-		$transaksiLain->terbilang = $transaksi->terbilang;
+		$transaksiLain->nominal = $confirmationForm->nominal;
+		$transaksiLain->terbilang = $confirmationForm->terbilang;
 
 		return $transaksiLain;
 	}

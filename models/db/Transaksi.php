@@ -38,33 +38,9 @@ class Transaksi extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			['siaran_per_hari', 'required',
-				'when' => function($model) {
-					return $model->jenis_siaran == "periodik";
-				},
-				'whenClient' => 'function(attribute, value) {
-					return ($("#jenis_siaran").val == "periodik");
-				}'
-			],
-			['interval', 'required',
-				'when' => function($model) {
-					return $model->jenis_siaran == "periodik";
-				},
-				'whenClient' => 'function(attribute, value) {
-					return ($("#jenis_siaran").val == "periodik");
-				}'
-			],
-			['jumlah_siaran', 'required',
-				'when' => function($model) {
-					return $model->jenis_siaran == "per_siaran";
-				},
-				'whenClient' => 'function(attribute, value) {
-					return ($("#jenis_siaran").val == "per_siaran");
-				}'
-			],
 			[['nama', 'tanggal', 'nominal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'jenis_periode'], 'required'],
 			[['nama', 'tanggal', 'terbilang', 'deskripsi', 'jenis_transaksi', 'periode_awal', 'periode_akhir', 'no_order'], 'string'],
-			[['siaran_per_hari', 'jumlah_siaran', 'interval'], 'integer'],
+			[['siaran_per_hari', 'jumlah_siaran', 'frekuensi'], 'integer'],
 			[['tanggal'], 'safe'],
 			[['nama', 'produk'], 'string', 'max' => 100],
 			[['terbilang'], 'string', 'max' => 300]
@@ -108,15 +84,15 @@ class Transaksi extends \yii\db\ActiveRecord
 	}
 
 	public function haveSiaran() {
-		return (($this->jenis_transaksi == "berita_kehilangan")
-				|| ($this->jenis_transaksi == "iklan_nasional")
-				|| ($this->jenis_transaksi == "iklan_lokal")
-				|| ($this->jenis_transaksi == pengumuman));
+		return (($this->jenis_transaksi == "Berita Kehilangan")
+				|| ($this->jenis_transaksi == "Iklan nasional")
+				|| ($this->jenis_transaksi == "Iklan lokal")
+				|| ($this->jenis_transaksi == "Pengumuman"));
 	}
 
 	public function haveRekaman() {
-		return (($this->jenis_transaksi == "rekaman")
-				|| ($this->jenis_transaksi == "iklan_lokal")
-				|| ($this->jenis_transaksi == "iklan_nasional" ));
+		return (($this->jenis_transaksi == "Rekaman")
+				|| ($this->jenis_transaksi == "Iklan lokal")
+				|| ($this->jenis_transaksi == "Iklan nasional" ));
 	}
 }

@@ -6,6 +6,7 @@
 
 	use app\helpers\FormatHelper;
 	use app\helpers\TimeHelper;
+	use app\models\db\Akun;
 
 	$this->title = 'Transaksi';
 ?>
@@ -23,12 +24,6 @@
 		<?= Yii::$app->session->getFlash('error'); ?>
 	</div>
 <?php endif; ?>
-
-<div class="row">
-	<div class="col-md-12">
-		<h4>No. <?= $transaksi->akun_id . "-" . TimeHelper::timeStampToFormattedDate(TimeHelper::formattedDateToTimestamp($transaksi->tanggal, '%Y-%m-%d'), 'd/m/Y') . "-" . $transaksi->id ?></h4>
-	</div>
-</div>
 
 <div class="row">
 	<div class="col-md-3 col-md-offset-1">
@@ -60,15 +55,6 @@
 
 <div class="row">
 	<div class="col-md-3 col-md-offset-1">
-		<h5>Periode</h5>
-	</div>
-	<div class="col-md-8">
-		<h5><?= $transaksi->periode_awal . "&nbsp;&nbsp;&nbsp;&nbsp;<strong>-</strong>&nbsp;&nbsp;&nbsp;&nbsp;" . $transaksi->periode_akhir; ?></h5>
-	</div>
-</div>
-
-<div class="row">
-	<div class="col-md-3 col-md-offset-1">
 		<h5>Jenis Penyiaran</h5>
 	</div>
 	<div class="col-md-8">
@@ -87,47 +73,94 @@
 	</div>
 <?php endif; ?>
 
+<?php if($transaksi->jenis_periode == "periode"): ?>
+	<div class="row">
+		<div class="col-md-3 col-md-offset-1">
+			<h5>Periode</h5>
+		</div>
+		<div class="col-md-8">
+			<h5><?= $transaksi->periode_awal . "&nbsp;&nbsp;&nbsp;&nbsp;<strong>-</strong>&nbsp;&nbsp;&nbsp;&nbsp;" . $transaksi->periode_akhir; ?></h5>
+		</div>
+	</div>
+<?php endif; ?>
+
+<?php if($transaksi->jenis_periode == "periode"): ?>
+	<div class="row">
+		<div class="col-md-3 col-md-offset-1">
+			<h5>Frekuensi</h5>
+		</div>
+		<div class="col-md-8">
+			<h5>Setiap <?php if($transaksi->frekuensi > 1) echo $transaksi->frekuensi; ?> Hari</h5>
+		</div>
+	</div>
+<?php endif; ?>
+
 <div class="row">
 	<div class="col-md-3 col-md-offset-1">
 		<h5>Siaran</h5>
 	</div>
 	<div class="col-md-8">
-		<div class="row">
-			<div class="col-md-2">
-				<h5><?= $transaksi->jumlah_siaran ?></h5>
+		<?php if($transaksi->jenis_periode == "siaran"): ?>
+			<div class="row">
+				<div class="col-md-2">
+					<h5><?= $transaksi->jumlah_siaran ?></h5>
+				</div>
+				<div class="col-md-10">
+					<h5>siaran</h5>
+				</div>
 			</div>
-			<div class="col-md-10">
-				<h5>siaran</h5>
+		<?php endif; ?>
+		<?php if($transaksi->jenis_periode == "periode"): ?>
+			<div class="row">
+				<div class="col-md-2">
+					<h5><?= $transaksi->siaran_per_hari ?></h5>
+				</div>
+				<div class="col-md-10">
+					<h5>siaran per hari tayang</h5>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-2">
-				<h5><?= $transaksi->siaran_per_hari ?></h5>
-			</div>
-			<div class="col-md-10">
-				<h5>kali/hari</h5>
-			</div>
-		</div>
+		<?php endif; ?>
 	</div>
 </div>
 
 <br>
 <table class="table table-bordered">
 	<tr>
-		<th>Hari</th>
-		<th>Tanggal</th>
+		<?php if($transaksi->jenis_periode == "siaran"): ?>
+			<th>Hari</th>
+			<th>Tanggal</th>
+		<?php endif; ?>
 		<th>Jam Siaran</th>
 	</tr>
 	<?php foreach($siarans as $siaran): ?>
 		<tr>
-			<td><?= TimeHelper::getDay($siaran->tanggal, '%Y-%m-%d') ?></td>
-			<td><?= TimeHelper::getDate($siaran->tanggal, '%Y-%m-%d') ?></td>
-			<td><?= $siaran->waktu_mulai ?></td>
+			<?php if($transaksi->jenis_periode == "siaran"): ?>
+				<td><?= TimeHelper::getDay($siaran['tanggal'], '%Y-%m-%d') ?></td>
+				<td><?= TimeHelper::getDate($siaran['tanggal'], '%Y-%m-%d') ?></td>
+			<?php endif; ?>
+			<td><?= $siaran['waktu'] ?></td>
 		</tr>
 	<?php endforeach;?>
 </table>
 
 <hr>
+
+<table class="table table-striped">
+	<tr>
+		<th>Akun</th>
+		<th>Jenis</th>
+		<th>Nominal</th>
+		<th>Terbilang</th>
+	</tr>
+	<?php foreach($listTransaksi as $data): ?>
+		<tr>
+			<td><?= Akun::findOne($data->akun_id)->nama ?></td>
+			<td><?= $data->jenis_transaksi ?></td>
+			<td><?= $data->nominal ?></td>
+			<td><?= $data->terbilang ?></td>
+		</tr>
+	<?php endforeach; ?>
+</table>
 
 <div class="row">
 	<div class="col-md-8 col-md-offset-2">
@@ -141,11 +174,24 @@
 
 			<?= $form->field($confirmationForm, 'jenis_transaksi')->dropDownList([ 'debit' => 'Debit', 'kredit' => 'Kredit', ], ['prompt' => 'Pilih Jenis Transaksi']) ?>
 
+			<?= $form->field($confirmationForm, 'nominal')->textInput() ?>
+
+			<?= $form->field($confirmationForm, 'terbilang')->textInput() ?>
+
 			<div class="form-group text-center">
-		        <?= Html::submitButton('Konfirmasi', ['class' => 'btn btn-warning']) ?>
+		        <?= Html::submitButton('Tambah transaksi', ['class' => 'btn btn-warning']) ?>
 		    </div>
 
 		<?php ActiveForm::end(); ?>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-6">
+		<a href="<?= \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/newconfirm', 'id' => $transaksi->id]); ?>" class="btn btn-warning">Ulang</a>
+	</div>
+	<div class="col-md-6 text-right">
+		<a href="<?= \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/doconfirm', 'id' => $transaksi->id]); ?>" class="btn btn-warning">Simpan</a>
 	</div>
 </div>
 

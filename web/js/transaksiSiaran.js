@@ -2,31 +2,23 @@ var tab = 0;
 var activeTab = 0;
 var currentTab;
 var tanggalSiaran = [];
-var jamMulaiSiaran = [];
-var jamSelesaiSiaran = [];
+var jamSiaran = [];
 
-var addInputField = function(siaran, tanggal, jamMulai, jamSelesai) {
+var addInputField = function(siaran, tanggal, jam) {
 	var tanggalInput = document.createElement("input");
 	tanggalInput.setAttribute("type", "hidden");
 	tanggalInput.setAttribute("id", "tanggal" + siaran);
 	tanggalInput.setAttribute("name", "Siaran[" + siaran + "][tanggal]");
 	document.getElementById("input").appendChild(tanggalInput);
 
-	var jamMulaiInput = document.createElement("input");
-	jamMulaiInput.setAttribute("type", "hidden");
-	jamMulaiInput.setAttribute("id", "jamMulai" + siaran);
-	jamMulaiInput.setAttribute("name", "Siaran[" + siaran + "][jamMulai]");
-	document.getElementById("input").appendChild(jamMulaiInput);
-
-	var jamSelesaiInput = document.createElement("input");
-	jamSelesaiInput.setAttribute("type", "hidden");
-	jamSelesaiInput.setAttribute("id", "jamSelesai" + siaran);
-	jamSelesaiInput.setAttribute("name", "Siaran[" + siaran + "][jamSelesai]");
-	document.getElementById("input").appendChild(jamSelesaiInput);
+	var jamInput = document.createElement("input");
+	jamInput.setAttribute("type", "hidden");
+	jamInput.setAttribute("id", "jam" + siaran);
+	jamInput.setAttribute("name", "Siaran[" + siaran + "][jam]");
+	document.getElementById("input").appendChild(jamInput);
 
 	$("#tanggal" + siaran).val(tanggal);
-	$("#jamMulai" + siaran).val(jamMulai);
-	$("#jamSelesai" + siaran).val(jamSelesai);
+	$("#jam" + siaran).val(jam);
 }
 
 var chooseTab = function(siaran) {
@@ -35,22 +27,18 @@ var chooseTab = function(siaran) {
 		activeTab = 0;
 
 		$("#tanggalSiaran").prop("disabled", true);
-		$("#jamMulaiSiaran").prop("disabled", true);
-		$("#jamSelesaiSiaran").prop("disabled", true);
+		$("#jamSiaran").prop("disabled", true);
 
 		$("#tanggalSiaran").val("");
-		$("#jamMulaiSiaran").val("");
-		$("#jamSelesaiSiaran").val("");
+		$("#jamSiaran").val("");
 	} else {
 		$("#tanggalSiaran").prop("disabled", false);
-		$("#jamMulaiSiaran").prop("disabled", false);
-		$("#jamSelesaiSiaran").prop("disabled", false);
+		$("#jamSiaran").prop("disabled", false);
 
 		//save the currentTab first
 		if((activeTab!=0) && (activeTab <= tab)) {
 			tanggalSiaran[activeTab-1] = $("#tanggalSiaran").val();
-			jamMulaiSiaran[activeTab-1] = $("#jamMulaiSiaran").val();
-			jamSelesaiSiaran[activeTab-1] = $("#jamSelesaiSiaran").val();
+			jamSiaran[activeTab-1] = $("#jamSiaran").val();
 		}
 
 		//change to the selected tab
@@ -63,8 +51,7 @@ var chooseTab = function(siaran) {
 		$("#tab" + siaran).addClass("active");
 
 		$("#tanggalSiaran").val(tanggalSiaran[siaran-1]);
-		$("#jamMulaiSiaran").val(jamMulaiSiaran[siaran-1]);
-		$("#jamSelesaiSiaran").val(jamSelesaiSiaran[siaran-1]);
+		$("#jamSiaran").val(jamSiaran[siaran-1]);
 	}
 };
 
@@ -101,8 +88,7 @@ var addTab = function(siaran) {
 	}
 
 	tanggalSiaran.push(year + "-" + month + "-" + day);
-	jamMulaiSiaran.push(hour + ":" + minute);
-	jamSelesaiSiaran.push(hour + ":" + minute);
+	jamSiaran.push(hour + ":" + minute);
 
 	var tmp = activeTab;
 
@@ -115,7 +101,7 @@ var submitForm = function() {
 	chooseTab(activeTab);
 
 	for(var i=1 ; i<=tab ; i++) {
-		addInputField(i, tanggalSiaran[i-1], jamMulaiSiaran[i-1], jamSelesaiSiaran[i-1]);
+		addInputField(i, tanggalSiaran[i-1], jamSiaran[i-1]);
 	}
 	$("#form").submit();
 }
@@ -125,8 +111,7 @@ var removeTab = function(siaran) {
 	$("#tab" + siaran).remove();
 
 	tanggalSiaran.pop();
-	jamMulaiSiaran.pop();
-	jamSelesaiSiaran.pop();
+	jamSiaran.pop();
 
 	if(activeTab == siaran) {
 		chooseTab(siaran-1);
@@ -142,22 +127,7 @@ $(document).ready(function() {
 		format:"Y-m-d",
 	});
 
-	$("#tanggalAwal").datetimepicker({
-		timepicker:false,
-		format:"Y-m-d",
-	});
-
-	$("#tanggalAkhir").datetimepicker({
-		timepicker:false,
-		format:"Y-m-d",
-	});
-
 	$("#jumlahSiaran").spinner({
-		min: 0,
-		max: 20,
-	});
-
-	$("#siaranPerHari").spinner({
 		min: 0,
 		max: 20,
 		stop: function(e, ui) {
@@ -178,19 +148,13 @@ $(document).ready(function() {
 		format:"Y-m-d",
 	});
 
-	$("#jamMulaiSiaran").datetimepicker({
-		datepicker:false,
-		format: "H:i",
-	});
-
-	$("#jamSelesaiSiaran").datetimepicker({
+	$("#jamSiaran").datetimepicker({
 		datepicker:false,
 		format: "H:i",
 	});
 
 	$("#tanggalSiaran").prop("disabled", true);
-	$("#jamMulaiSiaran").prop("disabled", true);
-	$("#jamSelesaiSiaran").prop("disabled", true);
+	$("#jamSiaran").prop("disabled", true);
 
 	//initialize siaran
 	$.get("?request=siaran", function(data) {
@@ -201,21 +165,21 @@ $(document).ready(function() {
 		for(var d in siaran) {
 			addTab(i+1);
 			tanggalSiaran[i] = siaran[d]['tanggal'];
-			jamMulaiSiaran[i] = siaran[d]['jamMulai'];
-			jamSelesaiSiaran[i] = siaran[d]['jamSelesai'];
+			jamSiaran[i] = siaran[d]['jam'];
 			i++;
 		}
-		console.log(jamMulaiSiaran);
+		console.log(jamSiaran);
 
 		tab = i;
+		$("#jumlahSiaran").val(i);
 
 		if(tab > 0) {
 			chooseTab(1);
 		}
 	});
 
-	$("#siaranPerHari").change(function() {
-		currentTab = parseInt($("#siaranPerHari").val());
+	$("#jumlahSiaran").change(function() {
+		currentTab = parseInt($("#jumlahSiaran").val());
 
 		if(tab < currentTab) {
 			addTab(currentTab);

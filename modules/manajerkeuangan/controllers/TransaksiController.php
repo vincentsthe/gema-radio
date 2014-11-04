@@ -8,6 +8,7 @@ use yii\helpers\ArrayHelper;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
+use yii\web\Session;
 
 use app\models\db\Transaksi;
 use app\models\db\Akun;
@@ -117,21 +118,36 @@ class TransaksiController extends BaseController {
 		]);
 	}
 
+	public function actionNewconfirm($id) {
+		$session = new Session();
+		$session->open();
+
+		$session->set('transaksi', []);
+
+		return $this->redirect(['confirm', 'id'=>$id], 302);
+	}
+
 	public function actionConfirm($id) {
+		$session = new Session();
+		$session->open();
+
+		$listTransaksi = $session->get('transaksi');
+
 		$transaksi = Transaksi::findOne($id);
-		$siarans = $transaksi->getSiarans()->all();
+		if($transaksi->jenis_periode == "periode") {
+			$siarans = $transaksi->getSiarans()->limit($transaksi->siaran_per_hari)->all();
+		} else {
+			$siarans = $transaksi->getSiarans()->all();
+		}
 		$confirmationForm = new ConfirmationForm();
 		$akun = Akun::find()->all();
 
 		if((Yii::$app->request->isPost) && ($confirmationForm->load(Yii::$app->request->post()))) {
-			$transaksiLain = TransaksiLainFactory::createTransaksiLainFromConfirmation($transaksi, $confirmationForm);
-			if($transaksiLain->save()) {
-				$transaksi->confirmed = 1;
-				$transaksi->save();
-				Yii::$app->session->setFlash('success', 'Transaksi Berhasil Dikonfirmasi.');
-				return $this->redirect(['listunconfirmed']);
+			if($confirmationForm->validate()) {
+				$listTransaksi[] = $confirmationForm;
+				$session->set('transaksi', $listTransaksi);
 			} else {
-				Yii::$app->session->setFlash('error', 'Transaksi Gagal Dikonfirmasi.');
+				Yii::$app->session->setFlash('error', 'Input tidak valid.');
 			}
 		}
 
@@ -140,7 +156,42 @@ class TransaksiController extends BaseController {
 			'siarans' => $siarans,
 			'akun' => $akun,
 			'confirmationForm' => $confirmationForm,
+			'listTransaksi' => $listTransaksi,
 		]);
+	}
+
+	public function actionDoconfirm($id) {
+		$session = new Session();
+		$session->open();
+
+		$listTransaksi = $session->get('transaksi');
+		$transaksi = Transaksi::findOne($id);
+
+		$debit = 0;
+		$kredit = 0;
+
+		foreach ($listTransaksi as $data) {
+			if($data->jenis_transaksi == "debit") {
+				$debit += $data->nominal;
+			} else {
+				$kredit += $data->nominal;
+			}
+		}
+
+		if(($debit == $kredit) && ($debit == $transaksi->nominal)) {
+			foreach ($listTransaksi as $data) {
+				$transaksiLain = TransaksiLainFactory::createTransaksiLainFromConfirmation($transaksi, $data);
+				$transaksiLain->save();
+			}
+
+			$transaksi->confirmed = 1;
+			$transaksi->save();
+			Yii::$app->session->setFlash('success', 'transaksi berhasil dikonfirmasi');
+			return $this->redirect('listunconfirmed', 302);
+		} else {
+			Yii::$app->session->setFlash('error', 'Jumlah debit, kredit, dan nominal transaksi belum sama.');
+			return $this->redirect(['confirm', 'id'=>$id], 302);
+		}
 	}
 
 	public function actionListtransaction($date = "") {

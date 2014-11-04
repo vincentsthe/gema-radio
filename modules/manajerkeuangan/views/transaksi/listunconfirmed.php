@@ -42,7 +42,7 @@ use app\helpers\FormatHelper;
             	'attribute' => 'Konfirmasi',
             	'format' => 'raw',
             	'value' => function($model) {
-            		return '<a class="btn btn-warning" href="' . \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/confirm', 'id' => $model->id]) . '">Konfirmasi</a>';
+            		return '<a class="btn btn-warning" href="' . \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/newconfirm', 'id' => $model->id]) . '">Konfirmasi</a>';
             	},
             ]
         ],
