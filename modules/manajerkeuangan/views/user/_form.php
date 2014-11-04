@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\db\User */
 /* @var $form yii\widgets\ActiveForm */
+$model->password = null;
 ?>
 
 <div class="user-form">
