@@ -82,27 +82,26 @@
 
 <br>
 <div class="row">
-    <div class="col-md-2 col-md-offset-7 text-right">
-        Saldo Debit
+    <div class="col-md-2">
+        <a class="btn btn-warning" target="_blank" href="<?= Yii::$app->UrlManager->createUrl(['manajerkeuangan/tabungan-hari-tua/printtabungan', 'startDate' => $startDate, 'endDate' => $endDate]) ?>">Print</a>
     </div>
-    <div class="col-md-2 text-right">
-        <strong><?= FormatHelper::currency($debit) ?></strong>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-2 col-md-offset-7 text-right">
-        Saldo Kredit
-    </div>
-    <div class="col-md-2 text-right">
-        <strong><?= FormatHelper::currency($kredit) ?></strong>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-2 col-md-offset-7 text-right">
-        Saldo Total
-    </div>
-    <div class="col-md-2 text-right">
-        <strong><?= FormatHelper::currency($debit - $kredit) ?></strong>
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-3 col-md-offset-6 text-right">
+                Saldo Debit
+            </div>
+            <div class="col-md-2 text-right">
+                <strong><?= FormatHelper::currency($debit) ?></strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 col-md-offset-6 text-right">
+                Saldo Kredit
+            </div>
+            <div class="col-md-2 text-right">
+                <strong><?= FormatHelper::currency($kredit) ?></strong>
+            </div>
+        </div>
     </div>
 </div>
 

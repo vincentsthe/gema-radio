@@ -5,7 +5,7 @@ namespace app\helpers;
 class ConstantHelper {
 
 	public function getTabunganHariTuaId() {
-		return 49;
+		return 72;
 	}
 
 }
