@@ -3,6 +3,7 @@
     use yii\bootstrap\Nav;
     use yii\grid\GridView;
     use yii\helpers\Html;
+
 ?>
 <h2>Laporan Keuangan</h2>
 <?= Nav::widget([
@@ -21,6 +22,33 @@
     <tr><th>Keterangan</th><th>Debit</th><th>Kredit</th></tr>
     <?php foreach($rootAkuns as $rootakun) printRecursive($rootakun,0,$searchModel); ?>
 </table>
+
+    <?php
+        $total = 0;
+        foreach($rootAkuns as $rootakun) {
+            $total += getTotalDebit($rootakun);
+        }
+
+        if($total > 0) {
+            $kredit = 0;
+            $debit = $total;
+        } else {
+            $debit = 0;
+            $kredit = -$total;
+        }
+    ?>
+
+    <div class="row">
+        <div class="col-md-3 col-md-offset-6">
+            <h4>Saldo Debit</h4>
+            <h4>Saldo Kredit</h4>
+        </div>
+        <div class="col-md-3">
+            <h4><strong><?= FormatHelper::currency($debit) ?></strong></h4>
+            <h4><strong><?= FormatHelper::currency($kredit) ?></strong></h4>
+        </div>
+        <br><br>
+    </div>
 </div>
 
 <?php
@@ -46,6 +74,22 @@
 
             if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
             echo "<tr><td>".spaces($depth)."$model->nama</td><td><span class='pull-right'>" . FormatHelper::currency($debit) . "</span></td><td><span class='pull-right'>" . FormatHelper::currency($kredit) . "</span></td></tr>";
+        }
+    }
+
+    function getTotalDebit($model) {
+        $childs = $model->getChilds()->all();
+
+        if (count($childs) > 0){
+            $total = 0;
+
+            foreach($childs as $child){
+                $total += getTotalDebit($child);
+            }
+
+            return $total;
+        } else {
+            return $model->harga;
         }
     }
 
