@@ -25,7 +25,7 @@ TimePickerAsset::register($this);
 		</div>
 	<?php endif; ?>
 
-    <a class="btn btn-warning" href="<?= \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/listtransaction']) ?>"><span class="glyphicon glyphicon-chevron-left"></span<> Kembali</a>
+    <a class="btn btn-warning" href="<?= \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/listtransaction']) ?>"><span class="glyphicon glyphicon-chevron-left"> Kembali</a>
     <br><br>
     <div class="transaksi-lain-form">
 

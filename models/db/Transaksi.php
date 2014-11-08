@@ -18,6 +18,7 @@ use Yii;
  * @property integer $siaran_per_hari
  * @property string $deskripsi
  * @property string $jenis_transaksi
+ * @property integer $frekuensi
  *
  * @property Rekaman[] $rekamen
  * @property Siaran[] $siarans
@@ -94,5 +95,32 @@ class Transaksi extends \yii\db\ActiveRecord
 		return (($this->jenis_transaksi == "Rekaman")
 				|| ($this->jenis_transaksi == "Iklan lokal")
 				|| ($this->jenis_transaksi == "Iklan nasional" ));
+	}
+
+	public function fillFromSiaranForm($transaksiSiaranForm) {
+		$this->nama = $transaksiSiaranForm->nama;
+		$this->tanggal = $transaksiSiaranForm->tanggal;
+		$this->nominal = $transaksiSiaranForm->nominal;
+		$this->terbilang = $transaksiSiaranForm->terbilang;
+		$this->deskripsi = $transaksiSiaranForm->deskripsi;
+		$this->no_order = $transaksiSiaranForm->no_order;
+		$this->jenis_periode = $transaksiSiaranForm->jenis_periode;
+		$this->jenis_transaksi = $transaksiSiaranForm->jenis_transaksi;
+		$this->jumlah_siaran = $transaksiSiaranForm->jumlah_siaran;
+	}
+
+	public function fillFromPeriodeForm($transaksiPeriodeForm) {
+		$this->nama = $transaksiPeriodeForm->nama;
+		$this->tanggal = $transaksiPeriodeForm->tanggal;
+		$this->nominal = $transaksiPeriodeForm->nominal;
+		$this->terbilang = $transaksiPeriodeForm->terbilang;
+		$this->deskripsi = $transaksiPeriodeForm->deskripsi;
+		$this->no_order = $transaksiPeriodeForm->no_order;
+		$this->jenis_periode = $transaksiPeriodeForm->jenis_periode;
+		$this->jenis_transaksi = $transaksiPeriodeForm->jenis_transaksi;
+		$this->siaran_per_hari = $transaksiPeriodeForm->siaran_per_hari;
+		$this->frekuensi = $transaksiPeriodeForm->frekuensi;
+		$this->periode_awal = $transaksiPeriodeForm->periode_awal;
+		$this->periode_akhir = $transaksiPeriodeForm->periode_akhir;
 	}
 }

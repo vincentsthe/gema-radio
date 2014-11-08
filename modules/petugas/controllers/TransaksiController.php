@@ -126,7 +126,6 @@ class TransaksiController extends BaseController {
 		]);
 	}
 
-	//TODO: not yet adapt transaksiForm (still Transaksi Model now)
 	public function actionSave() {
 		$session = new Session;
 		$session->open();

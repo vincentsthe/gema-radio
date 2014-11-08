@@ -29,4 +29,19 @@ class TransaksiPeriodeForm extends Model {
 		];
 	}
 
+	public function fillFromTransaksi($transaksi) {
+		$this->nama = $transaksi->nama;
+		$this->tanggal = $transaksi->tanggal;
+		$this->nominal = $transaksi->nominal;
+		$this->terbilang = $transaksi->terbilang;
+		$this->deskripsi = $transaksi->deskripsi;
+		$this->no_order = $transaksi->no_order;
+		$this->jenis_periode = $transaksi->jenis_periode;
+		$this->jenis_transaksi = $transaksi->jenis_transaksi;
+		$this->siaran_per_hari = $transaksi->siaran_per_hari;
+		$this->frekuensi = $transaksi->frekuensi;
+		$this->periode_awal = $transaksi->periode_awal;
+		$this->periode_akhir = $transaksi->periode_akhir;
+	}
+
 }

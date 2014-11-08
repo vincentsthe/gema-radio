@@ -160,7 +160,7 @@ $(document).ready(function() {
 		console.log(jamSiaran);
 
 		tab = i;
-		$("#jumlahSiaran").val(i);
+		$("#siaranPerHari").val(i);
 
 		if(tab > 0) {
 			chooseTab(1);

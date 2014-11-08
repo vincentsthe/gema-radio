@@ -2,6 +2,9 @@
 
 namespace app\modules\manajerkeuangan\controllers;
 
+use app\models\db\Siaran;
+use app\models\form\TransaksiPeriodeForm;
+use app\models\form\TransaksiSiaranForm;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -15,7 +18,11 @@ use app\models\db\Akun;
 use app\models\db\TransaksiLain;
 use app\modules\manajerkeuangan\models\BukuBesar;
 use app\models\form\ConfirmationForm;
+use app\models\factory\TransaksiFactory;
 use app\models\factory\TransaksiLainFactory;
+use app\models\factory\SiaranFactory;
+use app\models\factory\RekamanFactory;
+use app\helpers\TimeHelper;
 
 class TransaksiController extends BaseController {
 
@@ -118,6 +125,41 @@ class TransaksiController extends BaseController {
 		]);
 	}
 
+	public function actionListedit() {
+		$dataProvider = new ActiveDataProvider([
+			'query' => Transaksi::find()
+				->where('confirmed=0'),
+			'pagination' => [
+				'pageSize' => 10,
+			],
+		]);
+
+		return $this->render('listedit', [
+			'dataProvider' => $dataProvider,
+		]);
+	}
+
+	public function actionListtransaction($date = "") {
+		$listTransaksi = TransaksiLain::find();
+
+		if($date != "") {
+			$listTransaksi = $listTransaksi->where('tanggal="' . $date . '"');
+		}
+		$listTransaksi = $listTransaksi->orderBy(['tanggal' => SORT_ASC])->with('akun');
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => $listTransaksi,
+			'pagination' => [
+				'pageSize' => 15,
+			]
+		]);
+
+		return $this->render('listtransaction', [
+			'date' => $date,
+			'dataProvider' => $dataProvider,
+		]);
+	}
+
 	public function actionNewconfirm($id) {
 		$session = new Session();
 		$session->open();
@@ -194,24 +236,190 @@ class TransaksiController extends BaseController {
 		}
 	}
 
-	public function actionListtransaction($date = "") {
-		$listTransaksi = TransaksiLain::find();
+	public function actionEdit($id) {
+		$session = new Session();
+		$session->open();
 
-		if($date != "") {
-			$listTransaksi = $listTransaksi->where('tanggal="' . $date . '"');
+		$transaksi = Transaksi::findOne($id);
+
+		if($transaksi->jenis_periode == "siaran") {
+			$transaksiSiaranForm = new TransaksiSiaranForm();
+			$transaksiSiaranForm->fillFromTransaksi($transaksi);
+			$session->set('transaksi', $transaksiSiaranForm);
+
+			if($transaksi->haveSiaran()) {
+				$listSiaran = $transaksi->siarans;
+			} else {
+				$listSiaran = $transaksi->rekaman;
+			}
+
+			$siarans = array();
+			foreach($listSiaran as $siaran) {
+				$record = array();
+				$record['tanggal'] = $siaran->tanggal;
+				$record['jam'] = substr($siaran->waktu, 0, 5);
+
+				$siarans[] = $record;
+			}
+
+			$session->set('siarans',  $siarans);
+			return $this->redirect(['editsiaran', 'id'=>$id], 302);
+		} else {
+			$transaksiPeriodeForm = new TransaksiPeriodeForm();
+			$transaksiPeriodeForm->fillFromTransaksi($transaksi);
+			$session->set('transaksi', $transaksiPeriodeForm);
+
+			if($transaksi->haveSiaran()) {
+				$listSiaran = Siaran::find()
+								->where('transaksi_id='.$transaksi->id)
+								->limit($transaksi->siaran_per_hari)
+								->all();
+			} else {
+				$listSiaran = Rekaman::find()
+								->where('transaksi_id='.$transaksi->id)
+								->limit($transaksi->siaran_per_hari)
+								->all();
+			}
+
+			$siarans = array();
+			foreach($listSiaran as $siaran) {
+				$record = array();
+				$record['jam'] = substr($siaran->waktu, 0, 5);
+
+				$siarans[] = $record;
+			}
+
+			$session->set('siarans',  $siarans);
+			return $this->redirect(['editperiode', 'id'=>$id], 302);
 		}
-		$listTransaksi = $listTransaksi->orderBy(['tanggal' => SORT_ASC])->with('akun');
+	}
 
-		$dataProvider = new ActiveDataProvider([
-			'query' => $listTransaksi,
-			'pagination' => [
-				'pageSize' => 15,
-			]
+	public function actionEditsiaran($id = 0, $request = "transaksi") {
+		$session = new Session();
+		$session->open();
+
+		$transaksiForm = $session->get('transaksi');
+		$siarans = $session->get('siarans');
+
+		if($request == 'siaran') {
+			Yii::$app->response->format = 'json';
+			return $siarans;
+		}
+
+		$model = $transaksiForm;
+
+		if(Yii::$app->request->isPost) {
+			$model->load(Yii::$app->request->post());
+
+			if($model->validate()) {
+				$transaksi = Transaksi::findOne($id);
+				$transaksi->fillFromSiaranForm($model);
+
+				$siarans = Yii::$app->request->post('Siaran');
+
+				if($transaksi->update(false)) {
+					foreach ($siarans as $siaran) {
+						if ($transaksi->haveSiaran()) {
+							$listSiaran = $transaksi->siarans;
+							foreach($listSiaran as $record) {
+								$record->delete();
+							}
+
+							$siaran = SiaranFactory::createSiaranFromInput($siaran['tanggal'], $siaran['jam'] . ":00", $transaksi->id);
+							$siaran->save();
+						}
+						if ($transaksi->haveRekaman()) {
+							$listRekaman = $transaksi->rekaman;
+							foreach($listRekaman as $record) {
+								$record->delete();
+							}
+
+							$rekaman = RekamanFactory::createRekamanFromInput($siaran['tanggal'], $siaran['jam'] . ":00", $transaksi->id);
+							$rekaman->save();
+						}
+					}
+					Yii::$app->session->setFlash('success', 'Transaksi berhasil diedit.');
+					return $this->redirect(['edit', 'id' => $id]);
+				} else {
+					Yii::$app->session->setFlash('error', 'Transaksi gagal diedit.');
+				}
+			} else {
+				Yii::$app->session->setFlash('error', 'Data tidak valid, masukan data lagi.');
+			}
+		}
+
+		return $this->render('edittransaksisiaran', [
+			'model' => $model,
 		]);
+	}
 
-		return $this->render('listtransaction', [
-			'date' => $date,
-			'dataProvider' => $dataProvider,
+	public function actionEditperiode($id = 0, $request = "transaksi") {
+		$session = new Session();
+		$session->open();
+
+		$transaksiForm = $session->get('transaksi');
+		$siarans = $session->get('siarans');
+
+		if($request == 'siaran') {
+			Yii::$app->response->format = 'json';
+			return $siarans;
+		}
+
+		$model = $transaksiForm;
+
+		if(Yii::$app->request->isPost) {
+			$model->load(Yii::$app->request->post());
+
+			if($model->validate()) {
+				$transaksi = Transaksi::findOne($id);
+				$transaksi->fillFromPeriodeForm($model);
+
+				$siarans = Yii::$app->request->post('Siaran');
+
+				if($transaksi->update(false)) {
+					if ($transaksi->haveSiaran()) {
+						$listSiaran = $transaksi->siarans;
+						foreach ($listSiaran as $record) {
+							$record->delete();
+						}
+					}
+					if ($transaksi->haveRekaman()) {
+						$listRekaman = $transaksi->rekaman;
+						foreach ($listRekaman as $record) {
+							$record->delete();
+						}
+					}
+
+					$tanggal = $transaksi->periode_awal;
+					while (TimeHelper::compareFirstDate($tanggal, $transaksi->periode_akhir)) {
+						foreach ($siarans as $siaran) {
+							if ($transaksi->haveSiaran()) {
+								$siaran = SiaranFactory::createSiaranFromInput($tanggal, $siaran['jam'] . ":00", $transaksi->id);
+								$siaran->save();
+							}
+							if ($transaksi->haveRekaman()) {
+								$rekaman = RekamanFactory::createRekamanFromInput($tanggal, $siaran['jam'] . ":00", $transaksi->id);
+								$rekaman->save();
+							}
+						}
+						for ($i = 0; $i < $transaksi->frekuensi; $i++) {
+							$tanggal = TimeHelper::getTomorrowDate($tanggal);
+						}
+					}
+					Yii::$app->session->setFlash('success', 'Transaksi berhasil diedit.');
+					return $this->redirect(['edit', 'id' => $id]);
+				} else {
+					Yii::$app->session->setFlash('error', 'Transaksi gagal diedit.');
+				}
+			} else {
+				var_dump($model->errors);
+				exit;
+				Yii::$app->session->setFlash('error', 'Data tidak valid, masukan data lagi.');
+			}
+		}
+
+		return $this->render('edittransaksiperiode', [
+			'model' => $model,
 		]);
 	}
 
