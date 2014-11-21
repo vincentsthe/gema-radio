@@ -9,6 +9,19 @@ use app\modules\manajerkeuangan\models\form\LaporanKeuanganForm;
 
 class LaporankeuanganController extends BaseController
 {
+
+    /**
+     * render screen loading
+     * habis itu, request AJAX isinya html ke ajax_url
+     * setelah itu, entire html di update.
+     */
+    public function actionLoad()
+    {
+        return $this->render('loading',[
+            'ajax_url' => \Yii::$app->urlManager->createUrl(['manajerkeuangan/laporankeuangan/index'])
+        ]);
+    }
+
     public function actionIndex($jenis = 'neraca')
     {
         $searchModel = new LaporanKeuanganForm;

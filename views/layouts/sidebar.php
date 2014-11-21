@@ -41,7 +41,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Notification', 'url' => ['/adminradio/notifikasi']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/laporankeuangan']],
-                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/bukutabungan']],
+                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/tabungan-hari-tua/listtabungan']],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);

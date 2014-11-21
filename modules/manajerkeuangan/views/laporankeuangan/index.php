@@ -3,6 +3,7 @@
     use yii\bootstrap\Nav;
     use yii\grid\GridView;
     use yii\helpers\Html;
+    use yii\widgets\Pjax;
 
 ?>
 <h2>Laporan Keuangan</h2>
@@ -15,8 +16,10 @@
     ]);
 ?>
 <br>
+<?php Pjax::begin(); ?>
 <?=$this->render('_search',['model'=>$searchModel,'jenis'=>$jenis]); ?>
 <?php //Html::a('Update laporan','update',['class'=>'btn btn-warning']); ?><br><br><br>
+
 <div class="col-xs-8">
 <table class="table table-striped table-condensed">
     <tr><th>Keterangan</th><th>Debit</th><th>Kredit</th></tr>
@@ -50,7 +53,7 @@
         <br><br>
     </div>
 </div>
-
+<?php Pjax::end(); ?>
 <?php
     /**
      * @param Akun $model
