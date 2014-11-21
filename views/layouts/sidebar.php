@@ -50,13 +50,13 @@ use yii\widgets\Breadcrumbs;
 
             <?php
                 if(isset(Yii::$app->user->identity) && (Yii::$app->user->identity->isManajerKeuangan())) {
-                    echo '<h5>Menu Manajer Keuangan</h5>';
+                    echo '<h5>Menu Bagian Keuangan</h5>';
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
-                            ['label' => 'Konfirmasi', 'url' => ['/manajerkeuangan/transaksi/listunconfirmed']],
-                            ['label' => 'Edit Transaksi', 'url' => ['/manajerkeuangan/transaksi/listedit']],
-                            ['label' => 'Transaksi', 'url' => ['/manajerkeuangan/transaksi/add']],
+                            ['label' => 'Konfirmasi Post Akun', 'url' => ['/manajerkeuangan/transaksi/listunconfirmed']],
+                            ['label' => 'Edit Post Akun', 'url' => ['/manajerkeuangan/transaksi/listedit']],
+                            ['label' => 'Input Post Akun', 'url' => ['/manajerkeuangan/transaksi/newadd']],
                             ['label' => 'Ubah', 'url' => ['/manajerkeuangan/transaksi/listtransaction']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar/index']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/laporankeuangan/index']],
@@ -73,7 +73,7 @@ use yii\widgets\Breadcrumbs;
                     echo Nav::widget([
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
-                            ['label' => 'Transaksi', 'url' => ['/petugas/transaksi/createnewtransaksisiaran']],
+                            ['label' => 'Transaksi Biasa', 'url' => ['/petugas/transaksi/createnewtransaksisiaran']],
                             ['label' => 'Ubah Password', 'url' => ['/petugas/default/changepassword']],
                         ],
                     ]);

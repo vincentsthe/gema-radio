@@ -4,6 +4,7 @@
 	use yii\widgets\ActiveForm;
 
 	use app\assets\TimePickerAsset;
+	use app\models\db\Akun;
 
 	TimePickerAsset::register($this);
 ?>
@@ -44,13 +45,41 @@
     <?= $form->field($model, 'terbilang')->textInput(['maxlength' => 300]) ?>
 
     <div class="form-group text-center">
-        <?= Html::submitButton('Cetak', ['class' => 'btn btn-warning']) ?>
+        <?= Html::submitButton('Tambah', ['class' => 'btn btn-warning']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
 
 </div>
 
+<div class="col-md-9 col-md-offset-1">
+	<table class="table table-striped">
+		<tr>
+			<th>Akun</th>
+			<th>Jenis</th>
+			<th>Nominal</th>
+			<th>Terbilang</th>
+		</tr>
+		<?php foreach($transaction as $data): ?>
+			<tr>
+				<td><?= Akun::findOne($data->akun_id)->nama ?></td>
+				<td><?= $data->jenis_transaksi ?></td>
+				<td><?= $data->nominal ?></td>
+				<td><?= $data->terbilang ?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+
+
+	<div class="row">
+		<div class="col-md-6">
+			<a href="<?= \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/newadd']); ?>" class="btn btn-warning">Ulang</a>
+		</div>
+		<div class="col-md-6 text-right">
+			<a href="<?= \Yii::$app->urlManager->createUrl(['manajerkeuangan/transaksi/doadd']); ?>" class="btn btn-warning">Simpan</a>
+		</div>
+	</div>
+</div>
 <?php
 	$this->registerJS('
 		$("#tanggal").datetimepicker({

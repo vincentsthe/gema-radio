@@ -62,24 +62,66 @@ class TransaksiController extends BaseController {
         ]);
     }
 
+	public function actionNewadd() {
+		$session = new Session();
+		$session->open();
+
+		$session->set('transaksi', []);
+
+		return $this->redirect(['add']);
+	}
 
 	public function actionAdd() {
+		$session = new Session();
+		$session->open();
+
 		$model = new TransaksiLain();
 		$akun = Akun::find()->all();
 
 		if((Yii::$app->request->isPost) && ($model->load(Yii::$app->request->post()))) {
-			if($model->save()) {
-				Yii::$app->session->setFlash('success', 'Transaksi berhasil disimpan.');
-				return $this->redirect(['print', 'id' => $model->id]);
+			if($model->validate()) {
+				Yii::$app->session->setFlash('success', 'Transaksi ditambahkan.');
+				$transaction = $session->get('transaksi');
+				$transaction[] = $model;
+				$session->set('transaksi', $transaction);
 			} else {
 				Yii::$app->session->setFlash('error', 'Transaksi gagal disimpan.');
 			}
 		}
 
+		$transaction = $session->get('transaksi');
+
 		return $this->render('add', [
 			'model' => $model,
 			'akun' => $akun,
+			'transaction' => $transaction,
 		]);
+	}
+
+	public function actionDoadd() {
+		$session = new Session();
+		$session->open();
+
+		$transactions = $session->get('transaksi');
+		$sum = 0;
+		foreach($transactions as $transaction) {
+			if($transaction->jenis_transaksi == "debit") {
+				$sum += $transaction->nominal;
+			} else {
+				$sum -= $transaction->nominal;
+			}
+		}
+
+		if($sum != 0) {
+			Yii::$app->session->setFlash('error', 'Jumlah debit dan kredit belum sama.');
+			return $this->redirect(['add']);
+		} else {
+			foreach($transactions as $transaction) {
+				$transaction->save();
+			}
+			Yii::$app->session->setFlash('success', 'Transaksi berhasil disimpan.');
+			return $this->redirect(['newadd']);
+		}
 	}
 
 	public function actionPrint($id) {
