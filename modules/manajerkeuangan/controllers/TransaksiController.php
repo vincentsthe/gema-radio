@@ -84,6 +84,7 @@ class TransaksiController extends BaseController {
 				$transaction = $session->get('transaksi');
 				$transaction[] = $model;
 				$session->set('transaksi', $transaction);
+				$model = new TransaksiLain();
 			} else {
 				Yii::$app->session->setFlash('error', 'Transaksi gagal disimpan.');
 			}
@@ -230,6 +231,7 @@ class TransaksiController extends BaseController {
 			if($confirmationForm->validate()) {
 				$listTransaksi[] = $confirmationForm;
 				$session->set('transaksi', $listTransaksi);
+				$confirmationForm = new ConfirmationForm();
 			} else {
 				Yii::$app->session->setFlash('error', 'Input tidak valid.');
 			}

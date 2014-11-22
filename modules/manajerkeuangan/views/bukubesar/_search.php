@@ -13,7 +13,7 @@
 <?= $form->errorSummary($model); ?>
 
     <div class='col-xs-3'>
-        Akun <?= Html::activeDropDownList($model,'akun_id',ArrayHelper::map($akuns,'id','nama'),['class'=>'form-control']); ?>
+        Akun <?= Html::activeDropDownList($model,'akun_id',ArrayHelper::map($akuns,'id','nama'),['class'=>'form-control', 'prompt' => 'Pilih akun']); ?>
         
     </div>
     <div class='col-xs-3'>

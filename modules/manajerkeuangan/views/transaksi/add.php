@@ -44,6 +44,8 @@
 
     <?= $form->field($model, 'terbilang')->textInput(['maxlength' => 300]) ?>
 
+	<?= $form->field($model, 'deskripsi')->textArea(['maxlength' => 256, 'rows' => 4]) ?>
+
     <div class="form-group text-center">
         <?= Html::submitButton('Tambah', ['class' => 'btn btn-warning']) ?>
     </div>
@@ -52,13 +54,15 @@
 
 </div>
 
-<div class="col-md-9 col-md-offset-1">
+
+<div class="col-md-12">
 	<table class="table table-striped">
 		<tr>
 			<th>Akun</th>
 			<th>Jenis</th>
 			<th>Nominal</th>
 			<th>Terbilang</th>
+			<th>Deskripsi</th>
 		</tr>
 		<?php foreach($transaction as $data): ?>
 			<tr>
@@ -66,6 +70,7 @@
 				<td><?= $data->jenis_transaksi ?></td>
 				<td><?= $data->nominal ?></td>
 				<td><?= $data->terbilang ?></td>
+				<td><?= $data->deskripsi ?></td>
 			</tr>
 		<?php endforeach; ?>
 	</table>

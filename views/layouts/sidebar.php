@@ -55,7 +55,7 @@ use yii\widgets\Breadcrumbs;
                         'options' => ['class' => 'nav nav-sidebar'],
                         'items' => [
                             ['label' => 'Konfirmasi Post Akun', 'url' => ['/manajerkeuangan/transaksi/listunconfirmed']],
-                            ['label' => 'Edit Post Akun', 'url' => ['/manajerkeuangan/transaksi/listedit']],
+                            ['label' => 'Edit Transaksi Biasa', 'url' => ['/manajerkeuangan/transaksi/listedit']],
                             ['label' => 'Input Post Akun', 'url' => ['/manajerkeuangan/transaksi/newadd']],
                             ['label' => 'Ubah', 'url' => ['/manajerkeuangan/transaksi/listtransaction']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar/index']],

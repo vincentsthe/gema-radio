@@ -43,7 +43,8 @@ class TransaksiLain extends \yii\db\ActiveRecord
             [['jenis_transaksi'], 'string'],
             [['tanggal'], 'safe'],
             [['kegiatan'], 'string', 'max' => 100],
-            [['terbilang'], 'string', 'max' => 300]
+            [['terbilang'], 'string', 'max' => 300],
+            [['deskripsi'], 'string', 'max' => 256],
         ];
     }
 
@@ -60,6 +61,7 @@ class TransaksiLain extends \yii\db\ActiveRecord
             'tanggal' => 'Tanggal',
             'nominal' => 'Nominal',
             'terbilang' => 'Terbilang',
+            'deskripsi' => 'Deskripsi',
         ];
     }
 

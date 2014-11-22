@@ -16,6 +16,7 @@ class TransaksiLainFactory {
 		$transaksiLain->tanggal = $transaksi->tanggal;
 		$transaksiLain->nominal = $confirmationForm->nominal;
 		$transaksiLain->terbilang = $confirmationForm->terbilang;
+		$transaksiLain->deskripsi = $confirmationForm->deskripsi;
 
 		return $transaksiLain;
 	}

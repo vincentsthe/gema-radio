@@ -151,6 +151,7 @@
 		<th>Jenis</th>
 		<th>Nominal</th>
 		<th>Terbilang</th>
+		<th>Deskripsi</th>
 	</tr>
 	<?php foreach($listTransaksi as $data): ?>
 		<tr>
@@ -158,6 +159,7 @@
 			<td><?= $data->jenis_transaksi ?></td>
 			<td><?= $data->nominal ?></td>
 			<td><?= $data->terbilang ?></td>
+			<td><?= $data->deskripsi ?></td>
 		</tr>
 	<?php endforeach; ?>
 </table>
@@ -177,6 +179,8 @@
 			<?= $form->field($confirmationForm, 'nominal')->textInput() ?>
 
 			<?= $form->field($confirmationForm, 'terbilang')->textInput() ?>
+
+			<?= $form->field($confirmationForm, 'deskripsi')->textarea(['maxlength' => 256, 'rows' => 4]) ?>
 
 			<div class="form-group text-center">
 		        <?= Html::submitButton('Tambah transaksi', ['class' => 'btn btn-warning']) ?>

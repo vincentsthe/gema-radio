@@ -11,11 +11,13 @@ class ConfirmationForm extends Model {
 	public $jenis_transaksi;
 	public $nominal;
 	public $terbilang;
+	public $deskripsi;
 
 	public function rules() {
 		return [
 			[['akun_id', 'jenis_transaksi', 'nominal', 'terbilang'], 'required'],
 			[['nominal'], 'integer'],
+			[['deskripsi'], 'string'],
 		];
 	}
 

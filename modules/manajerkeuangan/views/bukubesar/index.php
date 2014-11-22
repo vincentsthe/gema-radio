@@ -3,6 +3,11 @@
     use yii\helpers\Html;
     use app\helpers\FormatHelper;
 ?>
+
+<?php
+    $debit = 0;
+    $kredit = 0;
+?>
 <h2>Buku Besar</h2>
 <br>
 <?= $this->render('_search',['model'=>$model,'akuns' => $akuns]); ?><br>
@@ -17,27 +22,22 @@
         ['class' => 'yii\grid\SerialColumn'],
         //'id',
         'tanggal',
-        'jenis_transaksi',
         [
             'class' => 'yii\grid\DataColumn',
-            'label' => 'Debet',
-            'value' => function($model,$key,$index,$column) use(&$debet){
-                $value = ($model->nominal >= 0)?$model->nominal:' ';
-                $debet += $value;
+            'label' => 'Nominal',
+            'value' => function($model,$key,$index,$column) use(&$debet, $kredit){
+                if($model->jenis_transaksi == "debit") {
+                    $debet += $model->nominal;
+                    $value = $model->nominal;
+                } else {
+                    $kredit += $model->nominal;
+                    $value = -$model->nominal;
+                }
                 return "<span class='pull-right'>".FormatHelper::currency($value)."</span>";
             },
             'format' => 'html',
         ],
-        [
-            'class' => 'yii\grid\DataColumn',
-            'label' => 'Kredit',
-            'value' => function($model,$key,$index,$column) use(&$kredit){
-                $value =  ($model->nominal < 0)?-$model->nominal:' ';
-                $kredit += $value;
-                return "<span class='pull-right'>".FormatHelper::currency($value)."</span>";
-            },
-            'format' => 'html',
-        ]
+        'deskripsi',
     ],
 ]);
 ?>
