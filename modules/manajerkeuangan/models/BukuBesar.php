@@ -21,7 +21,7 @@ class BukuBesar extends TransaksiLain
         return [
             //[['tanggal_awal','tanggal_akhir','akun_id'], 'required'],
             [['akun_id'], 'integer'],
-            [['tanggal_awal','tanggal_akhir'],'date'],
+            [['tanggal_awal','tanggal_akhir'],'string'],
 
             ['tanggal_awal','compare','compareAttribute' => 'tanggal_akhir','operator' => '<='],
         ];

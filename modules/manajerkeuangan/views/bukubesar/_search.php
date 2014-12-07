@@ -41,5 +41,6 @@ $this->registerJs(
         $("#tanggal_akhir").datetimepicker({
             timepicker:false,
             format:"Y-m-d",
-        });',\yii\web\View::POS_READY);
+        });
+        ',\yii\web\View::POS_READY);
 ?>

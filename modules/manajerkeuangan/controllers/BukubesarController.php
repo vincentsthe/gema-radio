@@ -2,6 +2,7 @@
 
 namespace app\modules\manajerkeuangan\controllers;
 
+use app\helpers\TimeHelper;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -44,6 +45,8 @@ class BukubesarController extends BaseController
     public function actionIndex()
     {
     	$model = new BukuBesar;
+		$model->tanggal_awal = TimeHelper::getBeginningYear(TimeHelper::getTodayDate());
+		$model->tanggal_akhir = TimeHelper::getTodayDate();
     	$akuns = Akun::find()->all();
     	$dataProvider = $model->search(Yii::$app->request->queryParams);
     	$params = Yii::$app->request->queryParams;
@@ -53,11 +56,13 @@ class BukubesarController extends BaseController
     	if (isset($params['BukuBesar'])){
     		$debet = TransaksiLain::find()
 	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
+				->andWhere(['>', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
 	    		->andWhere(['jenis_transaksi'=>TransaksiLain::DEBIT])
 	    		->sum('nominal'); 
     		if ($debet === null) $debet = 0;
 	    	$kredit = TransaksiLain::find()
 	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
+				->andWhere(['>', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
 	    		->andWhere(['jenis_transaksi'=>TransaksiLain::KREDIT])
 	    		->sum('nominal');
 	    	if ($kredit === null) $kredit = 0;

@@ -48,21 +48,23 @@
         	'attribute' => 'Debit',
         	'value' => function($model) {
         		if($model->jenis_transaksi == 'debit') {
-        			return FormatHelper::currency($model->nominal);
+        			return '<span class="green">' . FormatHelper::currency($model->nominal) . '</span>';
         		} else {
-        			return FormatHelper::currency(0);
+        			return '<span class="green">' . FormatHelper::currency(0) . '</span>';
         		}
         	},
+			'format' => 'html',
         ],
         [
         	'attribute' => 'Kredit',
         	'value' => function($model) {
         		if($model->jenis_transaksi == 'kredit') {
-        			return FormatHelper::currency($model->nominal);
-        		} else {
-        			return FormatHelper::currency(0);
+					return '<span class="red">' . FormatHelper::currency($model->nominal) . '</span>';
+				} else {
+					return '<span class="red">' . FormatHelper::currency(0) . '</span>';
         		}
         	},
+			'format' => 'html',
         ],
         [
         	'attribute' => 'Ubah',

@@ -43,8 +43,8 @@
 
     <div class="row">
         <div class="col-md-3 col-md-offset-6">
-            <h4>Saldo Debit</h4>
-            <h4>Saldo Kredit</h4>
+            <h4>Total Debit</h4>
+            <h4>Total Kredit</h4>
         </div>
         <div class="col-md-3">
             <h4 class="green"><strong><?= FormatHelper::currency($debit) ?></strong></h4>

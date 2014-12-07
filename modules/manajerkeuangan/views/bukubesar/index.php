@@ -22,26 +22,37 @@
         ['class' => 'yii\grid\SerialColumn'],
         //'id',
         'tanggal',
+        'deskripsi',
         [
             'class' => 'yii\grid\DataColumn',
-            'label' => 'Nominal',
+            'label' => 'Debet',
             'value' => function($model,$key,$index,$column) use(&$debet, $kredit){
                 if($model->jenis_transaksi == "debit") {
                     $debet += $model->nominal;
                     $value = $model->nominal;
                 } else {
                     $kredit += $model->nominal;
-                    $value = -$model->nominal;
+                    $value = 0;
                 }
-                if($value > 0) {
-                    return "<span class='pull-right green'>" . FormatHelper::currency($value) . "</span>";
-                } else {
-                    return "<span class='pull-right red'>" . FormatHelper::currency($value) . "</span>";
-                }
+                return "<span class='pull-right green'>" . FormatHelper::currency($value) . "</span>";
             },
             'format' => 'html',
         ],
-        'deskripsi',
+        [
+            'class' => 'yii\grid\DataColumn',
+            'label' => 'Nominal',
+            'value' => function($model,$key,$index,$column) use(&$debet, $kredit){
+                if($model->jenis_transaksi == "debit") {
+                    $debet += $model->nominal;
+                    $value = 0;
+                } else {
+                    $kredit += $model->nominal;
+                    $value = -$model->nominal;
+                }
+                return "<span class='pull-right red'>" . FormatHelper::currency($value) . "</span>";
+            },
+            'format' => 'html',
+        ],
     ],
 ]);
 ?>
