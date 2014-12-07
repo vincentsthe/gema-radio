@@ -33,7 +33,11 @@
                     $kredit += $model->nominal;
                     $value = -$model->nominal;
                 }
-                return "<span class='pull-right'>".FormatHelper::currency($value)."</span>";
+                if($value > 0) {
+                    return "<span class='pull-right green'>" . FormatHelper::currency($value) . "</span>";
+                } else {
+                    return "<span class='pull-right red'>" . FormatHelper::currency($value) . "</span>";
+                }
             },
             'format' => 'html',
         ],
@@ -46,6 +50,6 @@
 ?>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
-    <tr><td>Saldo Akhir (<?=$model->tanggal_akhir?>)</td><td><?=FormatHelper::currency($debet);?></td><td><?=FormatHelper::currency($kredit);?></td></tr>
+    <tr><td>Saldo Akhir (<?=$model->tanggal_akhir?>)</td><td class="green"><?=FormatHelper::currency($debet);?></td><td class="red"><?=FormatHelper::currency($kredit);?></td></tr>
 </table>
 </div>

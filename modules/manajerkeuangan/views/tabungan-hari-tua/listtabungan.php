@@ -59,23 +59,27 @@
         'jenis_kegiatan',
         [
         	'attribute' => 'Debit',
+            'label' => 'Debit',
         	'value' => function($model) {
         		if($model->jenis_transaksi == 'debit') {
-        			return FormatHelper::currency($model->nominal);
+        			return "<span class='green'>" . FormatHelper::currency($model->nominal) . "</span>";
         		} else {
-        			return FormatHelper::currency(0);
+        			return "<span class='green'>" . FormatHelper::currency(0) . "</span>";
         		}
         	},
+            'format' => 'html',
         ],
         [
+            'class' => 'yii\grid\DataColumn',
         	'attribute' => 'Kredit',
         	'value' => function($model) {
         		if($model->jenis_transaksi == 'kredit') {
-        			return FormatHelper::currency($model->nominal);
+        			return '<span class="red">' . FormatHelper::currency($model->nominal) . '</span>';
         		} else {
-        			return FormatHelper::currency(0);
+        			return '<span class="red">' . FormatHelper::currency(0) . '</span>';
         		}
         	},
+            'format' => 'html',
         ],
     ],
 ]); ?>
@@ -90,7 +94,7 @@
             <div class="col-md-3 col-md-offset-6 text-right">
                 Saldo Debit
             </div>
-            <div class="col-md-2 text-right">
+            <div class="col-md-2 text-right green">
                 <strong><?= FormatHelper::currency($debit) ?></strong>
             </div>
         </div>
@@ -98,7 +102,7 @@
             <div class="col-md-3 col-md-offset-6 text-right">
                 Saldo Kredit
             </div>
-            <div class="col-md-2 text-right">
+            <div class="col-md-2 text-right red">
                 <strong><?= FormatHelper::currency($kredit) ?></strong>
             </div>
         </div>

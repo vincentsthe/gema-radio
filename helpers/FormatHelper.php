@@ -6,6 +6,6 @@ function money_format($string,$value){
 }
 class FormatHelper {
 	public static function currency($value) {
-		return preg_replace("/IDR/", "Rp ", money_format('%i', floatval($value)));
+		return "Rp " . number_format(floatval($value), 2, '.', ',');
 	}
 }
