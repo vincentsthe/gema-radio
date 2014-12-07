@@ -1,7 +1,9 @@
 <?php
 	
 	use yii\helpers\Html;
+	use yii\helpers\ArrayHelper;
 	use yii\grid\GridView;
+	use yii\widgets\ActiveForm;
 
 	use app\assets\TimePickerAsset;
 	use app\helpers\FormatHelper;
@@ -12,24 +14,38 @@
 <h1>Daftar Transaksi</h1>
 <hr>
 
-<div class="row">
-	<div class="col-md-5 col-md-offset-6">
-		<form action="?" method="GET">
-			<div class="row">
-				<div class="col-md-3">
-					<label for="tanggal">Tanggal</label>
-				</div>
-				<div class="col-md-6">
-					<input class="form-control" id="tanggal" type="text" name="date"></input>
-				</div>
-				<div class="col-md-3">
-					<button class="btn btn-warning">Proses</button>
-				</div>
-			</div>
-		</form>
+<div class='col-xs-12'>
+	<?php $form = ActiveForm::begin([
+		'method'=>'get',
+		'options' =>
+			[
+				'data-pjax' => 1,
+			],
+	]);
+	?>
+	<?= $form->errorSummary($model); ?>
+	<div class="row">
+		<div class="col-xs-3">
+			Akun
+			<?= Html::activeDropDownList($model,'akun_id',ArrayHelper::map($akuns,'id','nama'),['class'=>'form-control', 'prompt' => 'Pilih akun']); ?>
+		</div>
+		<div class='col-xs-3'>
+			Mulai
+			<?= Html::activeTextInput($model,'tanggal_awal',['id' => 'tanggal_awal','class'=>'form-control']); ?>
+		</div>
+		<div class='col-xs-3'>
+			Akhir
+			<?= Html::activeTextInput($model,'tanggal_akhir',['id' => 'tanggal_akhir','class'=>'form-control']); ?>
+		</div>
+		<div class='col-xs-3'>
+			<br>
+			<?= Html::submitButton('Proses',['class' => 'btn btn-success']); ?>
+		</div>
 	</div>
+
+	<?php ActiveForm::end(); ?>
 </div>
-<br><br>
+<br><br><br><br>
 
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
@@ -78,7 +94,11 @@
 
 <?php
 	$this->registerJS('
-		$("#tanggal").datetimepicker({
+		$("#tanggal_awal").datetimepicker({
+			timepicker: false,
+			format: "Y-m-d",
+		});
+		$("#tanggal_akhir").datetimepicker({
 			timepicker: false,
 			format: "Y-m-d",
 		});

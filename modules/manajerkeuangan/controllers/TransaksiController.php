@@ -5,6 +5,7 @@ namespace app\modules\manajerkeuangan\controllers;
 use app\models\db\Siaran;
 use app\models\form\TransaksiPeriodeForm;
 use app\models\form\TransaksiSiaranForm;
+use app\modules\manajerkeuangan\models\form\TransaksiSearchForm;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -185,22 +186,35 @@ class TransaksiController extends BaseController {
 
 	public function actionListtransaction($date = "") {
 		$listTransaksi = TransaksiLain::find();
+		$form = new TransaksiSearchForm();
+		$akuns = Akun::find()->all();
 
-		if($date != "") {
-			$listTransaksi = $listTransaksi->where('tanggal="' . $date . '"');
+		if ($form->load(\Yii::$app->request->get()) && $form->validate()) {
 		}
+
+		if($form->akun_id != "") {
+			$listTransaksi->andWhere('akun_id=' . $form->akun_id);
+		}
+
+		if($form->tanggal_awal != "") {
+			$listTransaksi->andWhere('tanggal>="' . $form->tanggal_awal . '"');
+			$listTransaksi->andWhere('tanggal<="' . $form->tanggal_akhir . '"');
+		}
+
 		$listTransaksi = $listTransaksi->orderBy(['tanggal' => SORT_ASC])->with('akun');
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $listTransaksi,
 			'pagination' => [
 				'pageSize' => 15,
-			]
+			],
 		]);
 
 		return $this->render('listtransaction', [
 			'date' => $date,
 			'dataProvider' => $dataProvider,
+			'model' => $form,
+			'akuns' => $akuns,
 		]);
 	}
 

@@ -57,7 +57,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Konfirmasi Post Akun', 'url' => ['/manajerkeuangan/transaksi/listunconfirmed']],
                             ['label' => 'Edit Transaksi Biasa', 'url' => ['/manajerkeuangan/transaksi/listedit']],
                             ['label' => 'Input Post Akun', 'url' => ['/manajerkeuangan/transaksi/newadd']],
-                            ['label' => 'Ubah', 'url' => ['/manajerkeuangan/transaksi/listtransaction']],
+                            ['label' => 'Daftar Transaksi', 'url' => ['/manajerkeuangan/transaksi/listtransaction']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar/index']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/laporankeuangan/index']],
                             ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/tabungan-hari-tua/listtabungan']],
