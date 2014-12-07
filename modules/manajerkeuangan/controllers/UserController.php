@@ -40,7 +40,7 @@ class UserController extends BaseController
 
     public function actionDelete($id)
     {
-        User::findOne($id)->one()->delete();
+        User::findOne($id)->delete();
         return $this->redirect(['index']);
     }
     /**
