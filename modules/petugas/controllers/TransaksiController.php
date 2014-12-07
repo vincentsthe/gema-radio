@@ -170,6 +170,7 @@ class TransaksiController extends BaseController {
 					}
 				}
 			}
+			$session->set('transaksi', $transaksi);
 			Yii::$app->session->setFlash('success', 'Transaksi berhasil disimpan.');
 		} else {
 			Yii::$app->session->setFlash('error', 'Terjadi error, masukan ulang data transaksi.');

@@ -120,4 +120,8 @@ class TimeHelper {
 
 		return $day . " " . $month . " " . $year;
 	}
+
+	public static function getBeginningYear($date) {
+		return substr($date, 0, 4) . "-01-01";
+	}
 }

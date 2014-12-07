@@ -2,7 +2,9 @@
 
 namespace app\models\db;
 
+use app\helpers\TimeHelper;
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "transaksi".
@@ -122,5 +124,17 @@ class Transaksi extends \yii\db\ActiveRecord
 		$this->frekuensi = $transaksiPeriodeForm->frekuensi;
 		$this->periode_awal = $transaksiPeriodeForm->periode_awal;
 		$this->periode_akhir = $transaksiPeriodeForm->periode_akhir;
+	}
+
+	public function getSerialNumber() {
+		return (new Query())->select(['COUNT(*) AS cnt'])
+							->from('transaksi')
+							->andWhere('id<' . $this->id)
+							->andWhere('tanggal>=' . TimeHelper::getBeginningYear($this->tanggal))
+							->all()[0]['cnt'] + 1;
+	}
+
+	public function getTransactionNumber() {
+		return preg_replace("/-/", "/", $this->tanggal) . "-" . $this->getSerialNumber();
 	}
 }
