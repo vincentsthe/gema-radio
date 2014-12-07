@@ -2,6 +2,7 @@
 
 namespace app\modules\manajerkeuangan\controllers;
 
+use app\helpers\TimeHelper;
 use yii\web\Controller;
 use app\models\db\Akun;
 use app\modules\manajerkeuangan\models\form\LaporanKeuanganForm;
@@ -12,8 +13,8 @@ class LaporankeuanganController extends BaseController
     public function actionIndex($jenis = 'neraca')
     {
         $searchModel = new LaporanKeuanganForm;
-        $searchModel->tanggal_awal = '2014-01-01';
-        $searchModel->tanggal_akhir = '2014-01-01';
+        $searchModel->tanggal_awal = TimeHelper::getBeginningYear(TimeHelper::getTodayDate());
+        $searchModel->tanggal_akhir = TimeHelper::getTodayDate();
         if ($searchModel->load(\Yii::$app->request->get()) && $searchModel->validate()) {
         }
 

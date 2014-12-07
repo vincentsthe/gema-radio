@@ -37,6 +37,10 @@ class TimeHelper {
 		return self::timestampToFormattedDate($timestamp, "Y-m-d");
 	}
 
+	public static function getTodayDate() {
+		return self::timestampToFormattedDate(time(), "Y-m-d");
+	}
+
 	public static function compareFirstDate($date1, $date2) {
 		$timestamp1 = self::formattedDateToTimestamp($date1 . " 00:00:00", "%Y-%m-%d %H:%M:%S");
 		$timestamp2 = self::formattedDateToTimestamp($date2 . " 00:00:00", "%Y-%m-%d %H:%M:%S");
