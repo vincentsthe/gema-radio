@@ -157,7 +157,8 @@ class TransaksiController extends BaseController {
 	public function actionListunconfirmed() {
 		$dataProvider = new ActiveDataProvider([
 			'query' => Transaksi::find()
-						->where('confirmed=0'),
+						->orWhere('confirmed=0')
+						->orWhere('date_confirmed="' . TimeHelper::getTodayDate() . '"'),
 			'pagination' => [
 				'pageSize' => 10,
 			],
@@ -271,6 +272,7 @@ class TransaksiController extends BaseController {
 			}
 
 			$transaksi->confirmed = 1;
+			$transaksi->date_confirmed = TimeHelper::getTodayDate();
 			$transaksi->save();
 			Yii::$app->session->setFlash('success', 'transaksi berhasil dikonfirmasi');
 			return $this->redirect('listunconfirmed', 302);
