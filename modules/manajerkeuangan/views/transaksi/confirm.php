@@ -158,9 +158,9 @@
 			<td><?= Akun::findOne($data->akun_id)->nama ?></td>
 			<td><?= $data->jenis_transaksi ?></td>
 			<?php if($data->jenis_transaksi == "debit"): ?>
-				<td class="green"><?= $data->nominal ?></td>
+				<td class="green"><?= FormatHelper::currency($data->nominal) ?></td>
 			<?php else: ?>
-				<td class="red"><?= $data->nominal ?></td>
+				<td class="red"><?= FormatHelper::currency($data->nominal) ?></td>
 			<?php endif; ?>
 			<td><?= $data->terbilang ?></td>
 			<td><?= $data->deskripsi ?></td>

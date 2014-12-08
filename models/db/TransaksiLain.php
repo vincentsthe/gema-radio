@@ -3,8 +3,10 @@
 namespace app\models\db;
 
 use Yii;
+use yii\db\Query;
 
 use app\helpers\ConstantHelper;
+use app\helpers\TimeHelper;
 use app\models\factory\TabunganHariTuaFactory;
 
 /**
@@ -73,8 +75,24 @@ class TransaksiLain extends \yii\db\ActiveRecord
         return $this->hasOne(Akun::className(), ['id' => 'akun_id']);
     }
 
+    public function getSerialNumber() {
+        return (new Query())->select(['COUNT(*) AS cnt'])
+            ->from('transaksi_lain')
+            ->andWhere('tanggal>="' . TimeHelper::getBeginningYear($this->tanggal) . '"')
+            ->all()[0]['cnt'] + 1;
+    }
+
+    public function getTransactionNumber() {
+        return $this->akun_id . "-" . preg_replace("/-/", "/", $this->tanggal) . "-" . $this->getSerialNumber();
+    }
+
     public function beforeSave() {
+        if($this->isNewRecord) {
+            $this->nomor = $this->getTransactionNumber();
+        }
+
         if(($this->isNewRecord) && (ConstantHelper::getTabunganHariTuaId() == $this->akun_id)) {
+
             $tabungan = TabunganHariTuaFactory::createTabunganHariTuaFromTransaksi($this);
             $tabungan->save();
         }

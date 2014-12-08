@@ -143,12 +143,12 @@ class TransaksiController extends BaseController {
 			if($transaksi->jenis_periode == "siaran") {
 				foreach($siarans as $siaran) {
 					if($transaksi->haveSiaran()) {
-						$siaran = SiaranFactory::createSiaranFromInput($siaran['tanggal'], $siaran['jam'] . ":00", $transaksi->id);
-						$siaran->save();
+						$siarandb = SiaranFactory::createSiaranFromInput($siaran['tanggal'], $siaran['jam'] . ":00", $transaksi->id);
+						$siarandb->save();
 					}
 					if($transaksi->haveRekaman()) {
-						$rekaman = RekamanFactory::createRekamanFromInput($siaran['tanggal'], $siaran['jam'] . ":00", $transaksi->id);
-						$rekaman->save();
+						$rekamandb = RekamanFactory::createRekamanFromInput($siaran['tanggal'], $siaran['jam'] . ":00", $transaksi->id);
+						$rekamandb->save();
 					}
 				}
 			}
@@ -157,12 +157,12 @@ class TransaksiController extends BaseController {
 				while (TimeHelper::compareFirstDate($tanggal, $transaksi->periode_akhir)) {
 					foreach ($siarans as $siaran) {
 						if($transaksi->haveSiaran()) {
-							$siaran = SiaranFactory::createSiaranFromInput($tanggal, $siaran['jam'] . ":00", $transaksi->id);
-							$siaran->save();
+							$siarandb = SiaranFactory::createSiaranFromInput($tanggal, $siaran['jam'] . ":00", $transaksi->id);
+							$siarandb->save();
 						}
 						if($transaksi->haveRekaman()) {
-							$rekaman = RekamanFactory::createRekamanFromInput($tanggal, $siaran['jam'] . ":00", $transaksi->id);
-							$rekaman->save();
+							$rekamandb = RekamanFactory::createRekamanFromInput($tanggal, $siaran['jam'] . ":00", $transaksi->id);
+							$rekamandb->save();
 						}
 					}
 					for($i=0 ; $i<$transaksi->frekuensi ; $i++) {

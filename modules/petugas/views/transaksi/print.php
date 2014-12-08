@@ -32,7 +32,7 @@
 			<h5>No. : </h5>
 		</div>
 		<div class="col-md-10">
-			<h5><?= $transaksi->getTransactionNumber() ?></h5>
+			<h5><?= $transaksi->nomor ?></h5>
 		</div>
 	</div>
 

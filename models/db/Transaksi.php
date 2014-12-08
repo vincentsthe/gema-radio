@@ -126,15 +126,40 @@ class Transaksi extends \yii\db\ActiveRecord
 		$this->periode_akhir = $transaksiPeriodeForm->periode_akhir;
 	}
 
+	public function getAccountCode() {
+		if($this->jenis_transaksi == "Iklan lokal") {
+			return "A1";
+		} else if($this->jenis_transaksi == "Iklan nasional") {
+			return "A2";
+		} else if($this->jenis_transaksi == "Berita Kehilangan") {
+			return "B1";
+		} else if($this->jenis_transaksi == "Pengumuman") {
+			return "A3";
+		} else {
+			return "B2";
+		}
+	}
+
 	public function getSerialNumber() {
 		return (new Query())->select(['COUNT(*) AS cnt'])
 							->from('transaksi')
-							->andWhere('id<' . $this->id)
-							->andWhere('tanggal>=' . TimeHelper::getBeginningYear($this->tanggal))
+							->andWhere('tanggal>="' . TimeHelper::getBeginningYear($this->tanggal) . '"')
 							->all()[0]['cnt'] + 1;
 	}
 
 	public function getTransactionNumber() {
-		return preg_replace("/-/", "/", $this->tanggal) . "-" . $this->getSerialNumber();
+		return $this->getAccountCode() . "-" . preg_replace("/-/", "/", $this->tanggal) . "-" . $this->getSerialNumber();
+	}
+
+	public function beforeSave($insert)
+	{
+		if (parent::beforeSave($insert)) {
+			if($this->isNewRecord) {
+				$this->nomor = $this->getTransactionNumber();
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

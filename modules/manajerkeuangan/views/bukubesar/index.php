@@ -24,6 +24,12 @@
         'tanggal',
         'deskripsi',
         [
+            'label' => 'Nomor Kuitansi',
+            'value' => function($model) {
+                return $model->nomor;
+            }
+        ],
+        [
             'class' => 'yii\grid\DataColumn',
             'label' => 'Debet',
             'value' => function($model,$key,$index,$column) use(&$debet, $kredit){
