@@ -158,9 +158,10 @@ class TransaksiController extends BaseController {
 
 	public function actionListunconfirmed() {
 		$dataProvider = new ActiveDataProvider([
-			'query' => Transaksi::find()
-						->orWhere('confirmed=0')
-						->orWhere('date_confirmed="' . TimeHelper::getTodayDate() . '"'),
+			'query' => Transaksi::find()->
+				where(['not', ['and', ['confirmed' => 1], ['<','tanggal',TimeHelper::getTodayDate()]]]),
+				//		->orWhere('confirmed=0')
+				//		->orWhere('date_confirmed="' . TimeHelper::getTodayDate() . '"'),
 			'pagination' => [
 				'pageSize' => 10,
 			],
