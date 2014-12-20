@@ -14,6 +14,8 @@ class TransaksiSearch extends Transaksi
 {
     public $tanggal_awal;
     public $tanggal_akhir;
+    public $teks_spot; //buat apa ???? tapi ada di rules
+    public $akun_id; //gak guna juga
     /**
      * @inheritdoc
      */
@@ -21,7 +23,7 @@ class TransaksiSearch extends Transaksi
     {
         return [
             [['id', 'no_order', 'nominal', 'jumlah_siaran', 'siaran_per_hari', 'teks_spot', 'akun_id'], 'integer'],
-            [['tanggal','tanggal_awal','tanggal_akhir'],'date'],
+            [['tanggal','tanggal_awal','tanggal_akhir'],'date','format'=>'yyyy-MM-dd'],
             [['nama', 'tanggal', 'produk', 'terbilang', 'deskripsi', 'jenis_transaksi'], 'safe'],
             
             [['tanggal'],'required','on' => 'edit'],
@@ -39,8 +41,9 @@ class TransaksiSearch extends Transaksi
         // bypass scenarios() implementation in the parent class
         return [
             'edit' => ['tanggal'],
-            'bukubesar' => ['tanggal_awal','tanggal_akhir','akun_id']
-        ]
+            'bukubesar' => ['tanggal_awal','tanggal_akhir','akun_id'],
+            'filtertanggal' => ['tanggal_awal','tanggal_akhir'],
+        ];
     }
 
     /**
@@ -79,6 +82,7 @@ class TransaksiSearch extends Transaksi
             ->andFilterWhere(['like', 'deskripsi', $this->deskripsi])
             ->andFilterWhere(['like', 'jenis_transaksi', $this->jenis_transaksi]);
 
+        $query->andFilterWhere(['between','tanggal',$this->tanggal_awal,$this->tanggal_akhir]);
         return $dataProvider;
     }
 }

@@ -24,7 +24,7 @@
         'tanggal',
         'deskripsi',
         [
-            'label' => 'Nomor Kuitansi',
+            'label' => 'Ref',
             'value' => function($model) {
                 return $model->nomor;
             }

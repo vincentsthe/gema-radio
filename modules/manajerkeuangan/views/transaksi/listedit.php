@@ -4,7 +4,9 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 use app\helpers\FormatHelper;
+use yii\widgets\ActiveForm;
 
+\app\assets\TimePickerAsset::register($this);
 ?>
 
     <h1>Edit Transaksi</h1>
@@ -20,8 +22,16 @@ use app\helpers\FormatHelper;
         <?= Yii::$app->session->getFlash('error'); ?>
     </div>
 <?php endif; ?>
+<div class='col-xs-12'>
+<?php $form = ActiveForm::begin(['method' => 'get']); ?>
+<?= $form->errorSummary($model); ?>
 
-<h3>Transaksi-transaksi yang belum dikonfirmasi</h3>
+    <div class='col-xs-4'><?= $form->field($model,'tanggal_awal')->textInput(['id'=>'tanggal_awal']); ?></div>
+    <div class='col-xs-4'><?= $form->field($model,'tanggal_akhir')->textInput(['id'=>'tanggal_akhir']); ?></div>
+    <div class='col-xs-4'><?= Html::submitButton('search',['class' => 'btn btn-primary']); ?></div>
+
+<?php ActiveForm::end(); ?>
+</div>
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
@@ -48,3 +58,15 @@ use app\helpers\FormatHelper;
         ]
     ],
 ]); ?>
+<?php
+$this->registerJs(
+    '   $("#tanggal_awal").datetimepicker({
+            timepicker:false,
+            format:"Y-m-d",
+        });
+        $("#tanggal_akhir").datetimepicker({
+            timepicker:false,
+            format:"Y-m-d",
+        });
+        ',\yii\web\View::POS_READY);
+?>

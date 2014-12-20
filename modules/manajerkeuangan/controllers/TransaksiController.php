@@ -24,6 +24,7 @@ use app\models\factory\TransaksiLainFactory;
 use app\models\factory\SiaranFactory;
 use app\models\factory\RekamanFactory;
 use app\helpers\TimeHelper;
+use app\models\search\TransaksiSearch;
 
 class TransaksiController extends BaseController {
 
@@ -171,16 +172,21 @@ class TransaksiController extends BaseController {
 	}
 
 	public function actionListedit() {
+		$searchModel = new TransaksiSearch(['scenario'=>'filtertanggal']);
+    	$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+    	/*
 		$dataProvider = new ActiveDataProvider([
 			'query' => Transaksi::find()
 				->where('confirmed=0'),
 			'pagination' => [
 				'pageSize' => 10,
 			],
-		]);
+		]);*/
 
 		return $this->render('listedit', [
 			'dataProvider' => $dataProvider,
+			'model' => $searchModel,
 		]);
 	}
 
