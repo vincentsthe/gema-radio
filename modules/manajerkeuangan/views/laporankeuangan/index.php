@@ -52,6 +52,7 @@
         </div>
         <br><br>
     </div>
+    <?= Html::a('Export ke CSV',['print','jenis'=>$jenis,'tanggal_awal'=>$searchModel->tanggal_awal,'tanggal_akhir'=>$searchModel->tanggal_akhir],['class'=>'btn btn-primary','target'=>'_blank','data-pjax'=>'0']); ?>
 </div>
 <?php Pjax::end(); ?>
 <?php
