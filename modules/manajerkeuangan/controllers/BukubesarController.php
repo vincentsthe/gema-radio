@@ -47,7 +47,8 @@ class BukubesarController extends BaseController
     	$model = new BukuBesar;
 		$model->tanggal_awal = TimeHelper::getBeginningYear(TimeHelper::getTodayDate());
 		$model->tanggal_akhir = TimeHelper::getTodayDate();
-    	$akuns = Akun::find()->all();
+		$model->akun_id = Akun::find()->where(['nama'=>'Kas'])->one()->id;
+    	$akuns = Akun::getLeafs();
     	$dataProvider = $model->search(Yii::$app->request->queryParams);
     	$params = Yii::$app->request->queryParams;
 
