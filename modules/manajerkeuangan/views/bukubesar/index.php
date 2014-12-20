@@ -70,3 +70,20 @@
     <tr><td>Saldo Akhir (<?=$model->tanggal_akhir?>)</td><td class="green"><?=FormatHelper::currency($debet);?></td><td class="red"><?=FormatHelper::currency($kredit);?></td></tr>
 </table>
 </div>
+<?= "Dari tanggal $model->tanggal_awal hingga $model->tanggal_akhir : <br/>"; ?>
+<?= Html::a('Export to CSV',['print','startDate' => $model->tanggal_awal,'endDate'=> $model->tanggal_akhir,'akun_id' => $model->akun_id],['class'=>'btn btn-primary','target'=>'_blank']); ?>
+&nbsp;<?= Html::a('',['print-all','startDate' => $model->tanggal_awal,'endDate'=> $model->tanggal_akhir],['id'=>'print-all','class'=>'btn btn-primary','onclick'=>'return click_all()','style'=>'display:none']); ?>
+<?php foreach($akuns as $akun) {
+    echo Html::a('',['print','startDate' => $model->tanggal_awal,'endDate'=>$model->tanggal_akhir,'akun_id' => $akun->id],['class'=>'print-clicker']);
+}
+?>
+<?php $this->registerJs("
+function click_all(){
+    $('.print-clicker').each(function(index){
+        var href = $(this).attr(href);
+        window.location.href = href;
+    });
+    console.log('woi');
+    return false;
+};",\yii\web\View::POS_HEAD);
+?>

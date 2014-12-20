@@ -77,5 +77,48 @@ class BukubesarController extends BaseController
         	'kredit' => $kredit
         ]);
     }
+
+    public function actionPrint($startDate, $endDate,$akun_id) {
+    	$pre_query = TransaksiLain::find()
+    		->andWhere(['between','tanggal',TimeHelper::getBeginningYear(TimeHelper::getTodayDate()),$startDate])
+    		->andWhere(['akun_id' => $akun_id]);
+
+    	$debit_awal = $pre_query->andWhere(['jenis_transaksi' => TransaksiLain::DEBIT])->sum('nominal');
+    	$kredit_awal = $pre_query->andWhere(['jenis_transaksi' => TransaksiLain::KREDIT])->sum('nominal');
+
+    	$data = TransaksiLain::find()->andWhere(['between','tanggal',$startDate,$endDate])->orderBy(['tanggal' => SORT_ASC])->all();
+
+
+		$output = fopen('php://output', 'w');
+
+		$total_debit = 0; $total_kredit = 0;
+
+		fputcsv($output, ['','Saldo awal','',$debit_awal,$kredit_awal]);
+		fputcsv($output, ['Tanggal', 'Deskripsi','Ref', 'Debit', 'Kredit']);
+
+		foreach ($data as $record) {
+			$recordDebit = 0;
+			$recordKredit = 0;
+			if($record->jenis_transaksi == "debit") {
+				$recordDebit = $record->nominal;
+			} else {
+				$recordKredit = $record->nominal;
+			}
+			$total_debit += $recordDebit;
+			$total_kredit += $recordKredit;
+
+			fputcsv($output, [$record->tanggal, $record->deskripsi,$record->nomor, $recordDebit, $recordKredit]);
+		}
+
+		fputcsv($output, []);
+		fputcsv($output, ['', 'Saldo Debit', '',$total_debit]);
+		fputcsv($output, ['', 'Saldo Kredit', '',$total_kredit]);
+
+		$filename = Akun::findOne($akun_id)->nama;
+		header('Content-type: application/xlsx');
+		header("Content-Disposition: attachment; filename=$filename.csv");
+		fclose($output);
+
+	}
     
 }
