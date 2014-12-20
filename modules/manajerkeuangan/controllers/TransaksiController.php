@@ -78,7 +78,7 @@ class TransaksiController extends BaseController {
 		$session->open();
 
 		$model = new TransaksiLain();
-		$akun = Akun::find()->all();
+		$akuns = Akun::getLeafs();
 
 		if((Yii::$app->request->isPost) && ($model->load(Yii::$app->request->post()))) {
 			if($model->validate()) {
@@ -96,7 +96,7 @@ class TransaksiController extends BaseController {
 
 		return $this->render('add', [
 			'model' => $model,
-			'akun' => $akun,
+			'akun' => $akuns,
 			'transaction' => $transaction,
 		]);
 	}

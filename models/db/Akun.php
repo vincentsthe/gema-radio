@@ -84,6 +84,14 @@ class Akun extends \yii\db\ActiveRecord
         return $this->hasMany(TransaksiLain::className(), ['akun_id' => 'id']);
     }
 
+    public function getParentAkun(){
+        return $this->hasOne(Akun::className(),['parent' => 'id'])->from(['parent_akun' => 'akun']);
+    }
+
+    public function getChildAkuns(){
+        return $this->hasMany(Akun::className(),['id'=>'parent'])->from(['child_akun'=>'akun']);
+    }
+
     /**
      * update harga hanya berdasarkan anak2nya tepat di bawahnya/transaksi
      */
@@ -144,4 +152,17 @@ class Akun extends \yii\db\ActiveRecord
     public static function findLabaRugi(){
         return self::find()->andWhere(['not in','nama',['Aktiva','Pasiva','Modal']]);
     }
+
+
+    public static function getLeafs(){
+        $data = self::find()->all();
+        $retval = [];
+        foreach($data as $akun) {
+            if ($akun->getChilds()->count() == 0){
+                array_push($retval,$akun);
+            }
+        }
+        return $retval;
+    }
+
 }

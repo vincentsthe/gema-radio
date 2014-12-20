@@ -36,7 +36,6 @@
     <?= $form->field($model, 'kegiatan')->textInput(['maxlength' => 100]) ?>
 
     <?= $form->field($model, 'akun_id')->dropDownList(ArrayHelper::map($akun, 'id', 'nama'), ['prompt' => 'Pilih Akun']) ?>
-
     <?= $form->field($model, 'jenis_transaksi')->dropDownList([ 'debit' => 'Debit', 'kredit' => 'Kredit', ], ['prompt' => 'Pilih Jenis Transaksi']) ?>
 
     <?= $form->field($model, 'tanggal')->textInput(['id' => 'tanggal']) ?>
