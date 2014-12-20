@@ -33,13 +33,13 @@
 					<label for="tanggal1">Mulai</label>
 				</div>
 				<div class="col-md-4">
-					<input class="form-control" id="tanggal1" type="text" name="startDate"></input>
+					<input class="form-control" id="tanggal1" type="text" name="startDate" value='<?=$startDate;?>'></input>
 				</div>
                 <div class="col-md-1">
                     <label for="tanggal2">Akhir</label>
                 </div>
                 <div class="col-md-4">
-                    <input class="form-control" id="tanggal2" type="text" name="endDate"></input>
+                    <input class="form-control" id="tanggal2" type="text" name="endDate" value='<?=$endDate;?>'></input>
                 </div>
 				<div class="col-md-1">
 					<button class="btn btn-warning">Proses</button>

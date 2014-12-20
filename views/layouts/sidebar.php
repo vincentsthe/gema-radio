@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
+use app\helpers\TimeHelper;
 ?>
 
 <?php $this->beginContent('@app/views/layouts/layout.php'); ?>
@@ -41,7 +42,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Notification', 'url' => ['/adminradio/notifikasi']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/laporankeuangan']],
-                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/tabungan-hari-tua/listtabungan']],
+                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/tabungan-hari-tua/listtabungan','startDate'=>TimeHelper::getBeginningYear(TimeHelper::getTodayDate()),'endDate'=>TimeHelper::getEndYear(TimeHelper::getTodayDate())]],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);
@@ -60,7 +61,7 @@ use yii\widgets\Breadcrumbs;
                             ['label' => 'Daftar Transaksi', 'url' => ['/manajerkeuangan/transaksi/listtransaction']],
                             ['label' => 'Buku Besar', 'url' => ['/manajerkeuangan/bukubesar/index']],
                             ['label' => 'Laporan Keuangan', 'url' => ['/manajerkeuangan/laporankeuangan/index']],
-                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/tabungan-hari-tua/listtabungan']],
+                            ['label' => 'Buku Tabungan Hari Tua', 'url' => ['/manajerkeuangan/tabungan-hari-tua/listtabungan','startDate'=>TimeHelper::getBeginningYear(TimeHelper::getTodayDate()),'endDate'=>TimeHelper::getEndYear(TimeHelper::getTodayDate())]],
                             ['label' => 'Konfigurasi Pengguna', 'url' => ['/manajerkeuangan/user/index']],
                         ],
                     ]);

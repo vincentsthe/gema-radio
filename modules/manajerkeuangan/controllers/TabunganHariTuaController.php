@@ -8,9 +8,11 @@ use yii\data\ActiveDataProvider;
 
 use app\models\db\TabunganHariTua;
 
-class TabunganHariTuaController extends BaseController {
 
-	public function actionListtabungan($startDate="", $endDate="") {
+use app\helpers\TimeHelper;
+
+class TabunganHariTuaController extends BaseController {
+	public function actionListtabungan($startDate,$endDate){
 		$query = TabunganHariTua::find();
 		$debit = TabunganHariTua::getTotalDebit();
 		$kredit = TabunganHariTua::getTotalKredit();

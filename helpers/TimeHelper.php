@@ -128,4 +128,9 @@ class TimeHelper {
 	public static function getBeginningYear($date) {
 		return substr($date, 0, 4) . "-01-01";
 	}
+
+	public static function getEndYear($date) {
+		return substr($date, 0, 4) . "-12-31";
+	}
+
 }
