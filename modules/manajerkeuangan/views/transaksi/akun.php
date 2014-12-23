@@ -23,11 +23,13 @@
 		<tr>
 			<th>Kode Akun</th>
 			<th>Akun</th>
+			<th>Aksi</th>
 		</tr>
 		<?php foreach($akun as $record): ?>
 			<tr>
 				<td><?= $record->kode; ?></td>
 				<td><?= $record->nama; ?></td>
+				<td><?= Html::a('Edit',['edit-akun','id'=>$record->id]); ?> </td>
 			</tr>
 		<?php endforeach; ?>
 	</table>

@@ -135,6 +135,23 @@ class TransaksiController extends BaseController {
 		]);
 	}
 
+	public function actionEditAkun($id){
+		$model = Akun::findOne($id);
+		if ($model === null){
+			throw new \yii\web\HttpException(404, 'Akun tidak ditemukan.');
+		}
+		if ($model->load(Yii::$app->request->post()) ) {
+			if ($model->save()){
+				Yii::$app->session->setFlash('success','Akun berhasil diubah');
+				$this->redirect('akun');
+			}
+			else
+				Yii::$app->session->setFlash('error','Akun gagal diubah');
+		}
+		return $this->render('edit-akun',[
+			'model' => $model]);
+	}
+
 	public function actionAkun() {
 		$model = new Akun();
 

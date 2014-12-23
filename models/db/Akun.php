@@ -158,7 +158,7 @@ class Akun extends \yii\db\ActiveRecord
         $data = self::find()->all();
         $retval = [];
         foreach($data as $akun) {
-            if ($akun->getChilds()->count() == 0){
+            if ($akun->getChilds()->count() == 0 && strtolower($akun->nama) != 'transaksi'){
                 array_push($retval,$akun);
             }
         }
