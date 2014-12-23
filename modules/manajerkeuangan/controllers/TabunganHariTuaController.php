@@ -72,8 +72,8 @@ class TabunganHariTuaController extends BaseController {
 
 		$output = fopen('php://output', 'w');
 
-		fputcsv($output, ['Tanggal', 'Jenis Kegiatan', 'Debit', 'Kredit']);
-
+		//fputcsv($output, ['Tanggal', 'Jenis Kegiatan', 'Debit', 'Kredit']);
+		fputs($output,implode("\t", ['Tanggal', 'Jenis Kegiatan', 'Debit', 'Kredit']).'\\r\\n');
 		foreach ($data as $record) {
 			$recordDebit = 0;
 			$recordKredit = 0;
@@ -82,16 +82,18 @@ class TabunganHariTuaController extends BaseController {
 			} else {
 				$recordKredit = $record->nominal;
 			}
-
-			fputcsv($output, [$record->tanggal, $record->jenis_kegiatan, $recordDebit, $recordKredit]);
+			fputs($output,implode("\t",[$record->tanggal, $record->jenis_kegiatan, $recordDebit, $recordKredit]).'\\r\\n');
+			//fputcsv($output, [$record->tanggal, $record->jenis_kegiatan, $recordDebit, $recordKredit]);
 		}
-
-		fputcsv($output, []);
-		fputcsv($output, ['', '', 'Saldo Debit', $debit]);
-		fputcsv($output, ['', '', 'Saldo Kredit', $kredit]);
+		fputs($output,implode("\t",[]).'\r\n');
+		//fputcsv($output, []);
+		fputs($output,implode('\t',['','','Saldo Debit',$debit,]).'\\r\\n');
+		//fputcsv($output, ['', '', 'Saldo Debit', $debit]);
+		fputs($output,implode('\t',['','','Saldo kredit',$kredit]).'\\r\\n');
+		//fputcsv($output, ['', '', 'Saldo Kredit', $kredit]);
 
 		header('Content-type: application/xlsx');
-		header('Content-Disposition: attachment; filename=tabungan-hari-tua.csv');
+		header('Content-Disposition: attachment; filename=tabungan-hari-tua.xls');
 	}
 
 	public function actionAdd() {

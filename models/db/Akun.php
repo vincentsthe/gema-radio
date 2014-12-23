@@ -19,6 +19,7 @@ use Yii;
  */
 class Akun extends \yii\db\ActiveRecord
 {
+    const KAS = 6;
     /**
      * @inheritdoc
      */

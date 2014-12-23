@@ -44,43 +44,61 @@ class BukubesarController extends BaseController
 
     public function actionIndex()
     {
+    	$params = Yii::$app->request->queryParams;
+		if ($params === null || !isset($params['BukuBesar'])){
+			$params['BukuBesar']['tanggal_awal'] = TimeHelper::getBeginningYear(TimeHelper::getTodayDate());
+			$params['BukuBesar']['tanggal_akhir'] = TimeHelper::getTodayDate();
+			$params['BukuBesar']['akun_id'] = Akun::KAS; //kas;
+		}
+    	$debit = 0; $kredit = 0;
+    	//hitung saldo dari awal banget sampe sebelum tanggal
+    	if (isset($params['BukuBesar'])){
+    		$debet = TransaksiLain::find()
+	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
+				->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
+	    		->andWhere(['jenis_transaksi'=>TransaksiLain::DEBIT])
+	    		->andWhere(['akun_id'=>$params['BukuBesar']['akun_id']])
+	    		->sum('nominal'); 
+    		if ($debit === null) $debit = 0;
+	    	$kredit = TransaksiLain::find()
+	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
+				->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
+	    		->andWhere(['jenis_transaksi'=>TransaksiLain::KREDIT])
+	    		->andWhere(['akun_id'=>$params['BukuBesar']['akun_id']])
+	    		->sum('nominal');
+	    	if ($kredit === null) $kredit = 0;
+    	} else {
+
+    	}
+
     	$model = new BukuBesar;
 		$model->tanggal_awal = TimeHelper::getBeginningYear(TimeHelper::getTodayDate());
 		$model->tanggal_akhir = TimeHelper::getTodayDate();
 		$model->akun_id = Akun::find()->where(['nama'=>'Kas'])->one()->id;
     	$akuns = Akun::getLeafs();
-    	$dataProvider = $model->search(Yii::$app->request->queryParams);
-    	$params = Yii::$app->request->queryParams;
-
-    	$debet = 0; $kredit = 0;
-    	//hitung saldo dari awal banget sampe sebelum tanggal
-    	if (isset($params['BukuBesar'])){
-    		$debet = TransaksiLain::find()
-	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
-				->andWhere(['>', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
-	    		->andWhere(['jenis_transaksi'=>TransaksiLain::DEBIT])
-	    		->sum('nominal'); 
-    		if ($debet === null) $debet = 0;
-	    	$kredit = TransaksiLain::find()
-	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
-				->andWhere(['>', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
-	    		->andWhere(['jenis_transaksi'=>TransaksiLain::KREDIT])
-	    		->sum('nominal');
-	    	if ($kredit === null) $kredit = 0;
-    	}
+    	$dataProvider = $model->search($params);
     	
+
+    	
+ 		if ($debit > $kredit) {
+ 			$debit -= $kredit; $kredit = 0;
+ 		} else {
+ 			$kredit -= $debit; $debit = 0;
+ 		}
         return $this->render('index',[
         	'model' => $model,
         	'akuns' => $akuns,
         	'dataProvider' => $dataProvider,
-        	'debet' => $debet,
+        	'debit' => $debit,
         	'kredit' => $kredit
         ]);
     }
 
     public function actionPrint($startDate, $endDate,$akun_id) {
+
     	$pre_query = TransaksiLain::find()
-    		->andWhere(['between','tanggal',TimeHelper::getBeginningYear(TimeHelper::getTodayDate()),$startDate])
+    		->andWhere(['<','tanggal',$startDate])
+			->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
     		->andWhere(['akun_id' => $akun_id]);
 
     	$debit_awal = $pre_query->andWhere(['jenis_transaksi' => TransaksiLain::DEBIT])->sum('nominal');
@@ -91,8 +109,13 @@ class BukubesarController extends BaseController
 
 		$output = fopen('php://output', 'w');
 
-		$total_debit = 0; $total_kredit = 0;
-
+		
+		if ($debit_awal > $kredit_awal) {
+			$debit_awal -= $kredit_awal; $kredit_awal = 0;
+		} else {
+			$kredit_awal -= $debit_awal; $debit_awal = 0;
+		}
+		$total_debit = $debit_awal; $total_kredit = $kredit_awal;
 		fputcsv($output, ['','Saldo awal','',$debit_awal,$kredit_awal]);
 		fputcsv($output, ['Tanggal', 'Deskripsi','Ref', 'Debit', 'Kredit']);
 
@@ -108,6 +131,13 @@ class BukubesarController extends BaseController
 			$total_kredit += $recordKredit;
 
 			fputcsv($output, [$record->tanggal, $record->deskripsi,$record->nomor, $recordDebit, $recordKredit]);
+		}
+		if ($total_debit > $total_kredit){
+			$total_debit -= $total_kredit;
+			$total_kredit = 0;
+		} else {
+			$total_kredit -= $total_debit;
+			$total_debit = 0;
 		}
 
 		fputcsv($output, []);

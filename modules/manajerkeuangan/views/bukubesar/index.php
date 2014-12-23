@@ -4,16 +4,13 @@
     use app\helpers\FormatHelper;
 ?>
 
-<?php
-    $debit = 0;
-    $kredit = 0;
-?>
+
 <h2>Buku Besar</h2>
 <br>
 <?= $this->render('_search',['model'=>$model,'akuns' => $akuns]); ?><br>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
-    <tr><td>Keadaan awal: (<?=$model->tanggal_awal?>) </td><td><?=FormatHelper::currency($debet);?></td><td><?=FormatHelper::currency($kredit);?></td></tr>
+    <tr><td>Keadaan awal: (<?=$model->tanggal_awal?>) </td><td><?=FormatHelper::currency($debit);?></td><td><?=FormatHelper::currency($kredit);?></td></tr>
 </table>
 </div>
 <?=GridView::widget([
@@ -32,12 +29,12 @@
         [
             'class' => 'yii\grid\DataColumn',
             'label' => 'Debet',
-            'value' => function($model,$key,$index,$column) use(&$debet, $kredit){
+            'value' => function($model,$key,$index,$column) use(&$debet, &$kredit){
                 if($model->jenis_transaksi == "debit") {
                     $debet += $model->nominal;
                     $value = $model->nominal;
                 } else {
-                    $kredit += $model->nominal;
+                    //$kredit += $model->nominal;
                     $value = 0;
                 }
                 return "<span class='pull-right green'>" . FormatHelper::currency($value) . "</span>";
@@ -47,13 +44,13 @@
         [
             'class' => 'yii\grid\DataColumn',
             'label' => 'Nominal',
-            'value' => function($model,$key,$index,$column) use(&$debet, $kredit){
+            'value' => function($model,$key,$index,$column) use(&$debet, &$kredit){
                 if($model->jenis_transaksi == "debit") {
-                    $debet += $model->nominal;
+                    //$debet += $model->nominal;
                     $value = 0;
                 } else {
                     $kredit += $model->nominal;
-                    $value = -$model->nominal;
+                    $value = $model->nominal;
                 }
                 return "<span class='pull-right red'>" . FormatHelper::currency($value) . "</span>";
             },
@@ -63,6 +60,7 @@
 ]);
 ?>
 <?php
+    //echo $debet." ".$kredit;
     if ($debet > $kredit) {$debet -= $kredit; $kredit = 0; } else {$kredit -= $debet; $debet = 0;}
 ?>
 <div class='col-xs-6 col-xs-offset-6'>
