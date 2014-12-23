@@ -91,7 +91,7 @@ class TabunganHariTuaController extends BaseController {
 		fputcsv($output, ['', '', 'Saldo Kredit', $kredit]);
 
 		header('Content-type: application/xlsx');
-		header('Content-Disposition: attachment; filename=tes.csv');
+		header('Content-Disposition: attachment; filename=tabungan-hari-tua.csv');
 	}
 
 	public function actionAdd() {
@@ -100,7 +100,7 @@ class TabunganHariTuaController extends BaseController {
 		if((Yii::$app->request->isPost) && ($model->load(Yii::$app->request->post()))) {
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', 'Transaksi berhasil disimpan.');
-				return $this->redirect(['listtabungan']);
+				return $this->redirect(['listtabungan','startDate'=>'2014-01-01','endDate'=>'2014-12-31']);
 			} else {
 				Yii::$app->session->setFlash('error', 'Transaksi gagal disimpan.');
 			}
