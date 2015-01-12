@@ -8,6 +8,7 @@ use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\data\ActiveDataProvider;
 use Yii;
+use app\helpers\FormatHelper;
 
 use app\models\db\Transaksi;
 use app\models\db\TransaksiLain;
@@ -53,16 +54,16 @@ class BukubesarController extends BaseController
     	$debit = 0; $kredit = 0;
     	//hitung saldo dari awal banget sampe sebelum tanggal
     	if (isset($params['BukuBesar'])){
-    		$debet = TransaksiLain::find()
+    		$debit = TransaksiLain::find()
 	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
-				->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
+				->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear($params['BukuBesar']['tanggal_awal'])])
 	    		->andWhere(['jenis_transaksi'=>TransaksiLain::DEBIT])
 	    		->andWhere(['akun_id'=>$params['BukuBesar']['akun_id']])
 	    		->sum('nominal'); 
     		if ($debit === null) $debit = 0;
 	    	$kredit = TransaksiLain::find()
 	    		->andWhere(['<','tanggal',$params['BukuBesar']['tanggal_awal']])
-				->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
+				->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear($params['BukuBesar']['tanggal_awal'])])
 	    		->andWhere(['jenis_transaksi'=>TransaksiLain::KREDIT])
 	    		->andWhere(['akun_id'=>$params['BukuBesar']['akun_id']])
 	    		->sum('nominal');
@@ -98,7 +99,7 @@ class BukubesarController extends BaseController
 
     	$pre_query = TransaksiLain::find()
     		->andWhere(['<','tanggal',$startDate])
-			->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear(TimeHelper::getTodayDate())])
+			->andWhere(['>=', 'tanggal', TimeHelper::getBeginningYear($startDate)])
     		->andWhere(['akun_id' => $akun_id]);
 
     	$debit_awal = $pre_query->andWhere(['jenis_transaksi' => TransaksiLain::DEBIT])->sum('nominal');
@@ -116,8 +117,8 @@ class BukubesarController extends BaseController
 			$kredit_awal -= $debit_awal; $debit_awal = 0;
 		}
 		$total_debit = $debit_awal; $total_kredit = $kredit_awal;
-		fputcsv($output, ['','Saldo awal','',$debit_awal,$kredit_awal]);
-		fputcsv($output, ['Tanggal', 'Deskripsi','Ref', 'Debit', 'Kredit']);
+		fputcsv($output, ['','Saldo awal','',FormatHelper::currency($debit_awal - $kredit_awal)]);
+		fputcsv($output, ['Tanggal', 'Deskripsi','Ref', 'Nominal']);
 
 		foreach ($data as $record) {
 			$recordDebit = 0;
@@ -130,7 +131,7 @@ class BukubesarController extends BaseController
 			$total_debit += $recordDebit;
 			$total_kredit += $recordKredit;
 
-			fputcsv($output, [$record->tanggal, $record->deskripsi,$record->nomor, $recordDebit, $recordKredit]);
+			fputcsv($output, [$record->tanggal, $record->deskripsi,$record->nomor,FormatHelper::currency($recordDebit - $recordKredit)]);
 		}
 		if ($total_debit > $total_kredit){
 			$total_debit -= $total_kredit;
@@ -141,8 +142,8 @@ class BukubesarController extends BaseController
 		}
 
 		fputcsv($output, []);
-		fputcsv($output, ['', 'Saldo Debit', '',$total_debit]);
-		fputcsv($output, ['', 'Saldo Kredit', '',$total_kredit]);
+		fputcsv($output, ['', 'Saldo Akhir', '',FormatHelper::currency($total_debit - $total_kredit)]);
+		//fputcsv($output, ['', 'Saldo Kredit', '',$total_kredit]);
 
 		$filename = Akun::findOne($akun_id)->nama;
 		header('Content-type: application/xlsx');
