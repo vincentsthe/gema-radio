@@ -104,7 +104,7 @@ class BukubesarController extends BaseController
     	$debit_awal = $pre_query->andWhere(['jenis_transaksi' => TransaksiLain::DEBIT])->sum('nominal');
     	$kredit_awal = $pre_query->andWhere(['jenis_transaksi' => TransaksiLain::KREDIT])->sum('nominal');
 
-    	$data = TransaksiLain::find()->andWhere(['between','tanggal',$startDate,$endDate])->orderBy(['tanggal' => SORT_ASC])->all();
+    	$data = TransaksiLain::find()->andWhere(['>=','tanggal',$startDate])->andWhere(['<=','tanggal',$endDate])->andWhere(['akun_id' => $akun_id])->orderBy(['tanggal' => SORT_ASC])->all();
 
 
 		$output = fopen('php://output', 'w');
