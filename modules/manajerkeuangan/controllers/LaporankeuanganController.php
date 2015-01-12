@@ -51,9 +51,26 @@ class LaporankeuanganController extends BaseController
         fputcsv($output,['Keterangan','debit','kredit']);
         foreach($rootAkuns as $rootAkun)
             $this->printCSVRecursive($output,$rootAkun,0,$tanggal_awal,$tanggal_akhir);
+        
+        //rugi laba
+        $total = 0;
+        foreach($rootAkuns as $rootakun) {
+            $total += $this->getTotal($rootakun);
+        }
 
+        if($total > 0) {
+            $kredit = 0;
+            $debit = $total;
+        } else {
+            $debit = 0;
+            $kredit = -$total;
+        }
+
+        fputcsv($output,['Rugi laba tahun berjalan',FormatHelper::currency($debit),FormatHelper::currency($kredit)]);
+        //end of rugi laba tahun berjalan
+        $nama_file = ($jenis == 'neraca')?'neraca':'labarugi';
         header('Content-type: application/xlsx');
-        header('Content-Disposition: attachment; filename=tes.csv');
+        header('Content-Disposition: attachment; filename='.$nama_file.'.csv');
     }
 
     private function printCSVRecursive($output,$model,$depth,$tanggal_awal,$tanggal_akhir){
@@ -77,4 +94,19 @@ class LaporankeuanganController extends BaseController
         }
     }
 
+    private function getTotal($model) {
+        $childs = $model->getChilds()->all();
+
+        if (count($childs) > 0){
+            $total = 0;
+
+            foreach($childs as $child){
+                $total += $this->getTotal($child);
+            }
+
+            return $total;
+        } else {
+            return $model->harga;
+        }
+    }
 }
