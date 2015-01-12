@@ -49,7 +49,7 @@ AppAsset::register($this);
         ?>
     </div>
 
-        <div class="container-fluid">
+        <div class="container-fluid" style='background: rgba(42, 146, 150, 0.05)'>
             <?= $content ?>
         </div>
 
