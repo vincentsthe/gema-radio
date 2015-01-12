@@ -48,7 +48,7 @@ class LaporankeuanganController extends BaseController
         }
         $output = fopen('php://output','w');
 
-        fputcsv($output,['Keterangan','debit','kredit']);
+        fputcsv($output,['Keterangan','nominal']);
         foreach($rootAkuns as $rootAkun)
             $this->printCSVRecursive($output,$rootAkun,0,$tanggal_awal,$tanggal_akhir);
         
@@ -66,7 +66,7 @@ class LaporankeuanganController extends BaseController
             $kredit = -$total;
         }
 
-        fputcsv($output,['Rugi laba tahun berjalan',FormatHelper::currency($debit),FormatHelper::currency($kredit)]);
+        fputcsv($output,['Rugi laba tahun berjalan',FormatHelper::currency($debit-$kredit)]);
         //end of rugi laba tahun berjalan
         $nama_file = ($jenis == 'neraca')?'neraca':'labarugi';
         header('Content-type: application/xlsx');
@@ -84,13 +84,13 @@ class LaporankeuanganController extends BaseController
             }
             $model->updateHarga($tanggal_awal,$tanggal_akhir);
             
-            if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
-            fputcsv($output, ["Total $model->nama",FormatHelper::currency($debit),FormatHelper::currency($kredit)]);           
+            //if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
+            fputcsv($output, ["Total $model->nama",FormatHelper::currency($model->harga)]);           
         } else {
             $model->updateHarga($tanggal_awal,$tanggal_akhir);
 
-            if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
-            fputcsv($output, [$model->nama,FormatHelper::currency($debit),FormatHelper::currency($kredit)]); 
+            //if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
+            fputcsv($output, [$model->nama,FormatHelper::currency($model->harga)]); 
         }
     }
 
@@ -108,5 +108,13 @@ class LaporankeuanganController extends BaseController
         } else {
             return $model->harga;
         }
+    }
+
+    private function printSpaces($n){
+        $ret = '';
+        for($i = 0; $i < $n; ++$i){
+            $ret .= ' ';
+        }
+        return $ret;
     }
 }

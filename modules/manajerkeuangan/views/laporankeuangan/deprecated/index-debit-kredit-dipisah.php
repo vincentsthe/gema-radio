@@ -22,7 +22,7 @@
 
 <div class="col-xs-8">
 <table class="table table-striped table-condensed">
-    <tr><th>Keterangan</th><th>Nominal</th></tr>
+    <tr><th>Keterangan</th><th>Debit</th><th>Kredit</th></tr>
     <?php foreach($rootAkuns as $rootakun) printRecursive($rootakun,0,$searchModel); ?>
 
 
@@ -40,22 +40,22 @@
             $kredit = -$total;
         }
     ?>
-    <?php $rugi_laba = $debit - $kredit; ?>
     <tr>
         <td>Rugi Laba Tahun Berjalan</td>
-        <td><span class='pull-right <?=($rugi_laba >= 0)?'green':'red';?>'><?=FormatHelper::currency($rugi_laba);?></span></td>
-    </tr>
+        <td><span class='pull-right green'><?=FormatHelper::currency($debit);?></span></td>
+        <td><span class='pull-right red'><?=FormatHelper::currency($kredit);?></span></td></tr>
 </table>
-    <!-- <div class="row">
+    <div class="row">
         <div class="col-md-3 col-md-offset-6">
-            <h4>Total</h4>
+            <h4>Total Debit</h4>
+            <h4>Total Kredit</h4>
         </div>
         <div class="col-md-3">
             <h4 class="green"><strong><?= FormatHelper::currency($debit) ?></strong></h4>
             <h4 class="red"><strong><?= FormatHelper::currency($kredit) ?></strong></h4>
         </div>
         <br><br>
-    </div> -->
+    </div>
     <?= Html::a('Export ke CSV',['print','jenis'=>$jenis,'tanggal_awal'=>$searchModel->tanggal_awal,'tanggal_akhir'=>$searchModel->tanggal_akhir],['class'=>'btn btn-primary','target'=>'_blank','data-pjax'=>'0']); ?>
 </div>
 <?php Pjax::end(); ?>
@@ -75,12 +75,13 @@
             }
             $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
             
-            $color = ($model->harga >= 0)?'green':'red';
-            echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td><span class='pull-right $color'>".FormatHelper::currency($model->harga)."</span></strong></td></tr>";
+            if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
+            echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td><span class='pull-right green'>".FormatHelper::currency($debit)."</span></td><td><span class='pull-right red'>".FormatHelper::currency($kredit)."</span></strong></td></tr>";
         } else {
             $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
-            $color = ($model->harga >= 0)?'green':'red';
-            echo "<tr><td>".spaces($depth)."$model->nama</td><td><span class='pull-right $color'>".FormatHelper::currency($model->harga)."</span></td></tr>";   
+
+            if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
+            echo "<tr><td>".spaces($depth)."$model->nama</td><td><span class='pull-right green'>" . FormatHelper::currency($debit) . "</span></td><td><span class='pull-right red'>" . FormatHelper::currency($kredit) . "</span></td></tr>";
         }
     }
 
