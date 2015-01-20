@@ -58,11 +58,11 @@ class SiteController extends Controller
             if ($user->isAdmin()){
                 $this->redirect(['/adminradio']);
             } else if ($user->isDirektur()){
-                $this->redirect(['/direktur']);
+                $this->redirect(['/manajerkeuangan/bukubesar']);
             } else if ($user->isManajerKeuangan()){
-                $this->redirect(['/manajerkeuangan']);
+                $this->redirect(['/manajerkeuangan/bukubesar']);
             } else if ($user->isPetugas()){
-                $this->redirect(['/petugas']);
+                $this->redirect(['/petugas/transaksi/createtransaksisiaran']);
             } else {
                 throw new \yii\web\HttpException(401,"Akun anda tidak memiliki hak akses apapun. Silakan hubungi admin.");
             }

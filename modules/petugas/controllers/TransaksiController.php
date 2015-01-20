@@ -31,7 +31,7 @@ class TransaksiController extends BaseController {
 		$session->open();
 
 		if($session->get('transaksi') === NULL) {
-			return $this->redirect('createnewtransaksi', 302);
+			return $this->redirect('createnewtransaksisiaran', 302);
 		}
 		
 		if($request == 'siaran') {
