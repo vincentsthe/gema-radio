@@ -27,7 +27,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios['register'] = ['_verify_password', 'password','username','fullname'];
+        $scenarios['register'] = ['_verify_password', 'password','username','fullname','is_admin','is_direktur','is_manajer','is_petugas'];
         return $scenarios;
     }
 

@@ -26,7 +26,6 @@ class UserController extends BaseController
     {
         $model = new User(['scenario' => 'register']);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $model->save();
             $hashPasswordModel = User::findOne($model->id);
             $hashPasswordModel->password = sha1($model->password);
             $hashPasswordModel->save();
