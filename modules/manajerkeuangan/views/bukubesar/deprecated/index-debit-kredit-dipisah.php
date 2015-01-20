@@ -43,7 +43,7 @@
         ],
         [
             'class' => 'yii\grid\DataColumn',
-            'label' => 'Nominal',
+            'label' => 'Kredit',
             'value' => function($model,$key,$index,$column) use(&$debet, &$kredit){
                 if($model->jenis_transaksi == "debit") {
                     //$debet += $model->nominal;

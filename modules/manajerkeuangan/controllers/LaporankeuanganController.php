@@ -53,20 +53,38 @@ class LaporankeuanganController extends BaseController
             $this->printCSVRecursive($output,$rootAkun,0,$tanggal_awal,$tanggal_akhir);
         
         //rugi laba
-        $total = 0;
+        $rugi_laba = 0;
+        $aktiva = 0;
+        $pasiva = 0;
+        $modal = 0;
         foreach($rootAkuns as $rootakun) {
-            $total += $this->getTotal($rootakun);
+            $current_value = Akun::nilaiLaporan($rootakun->id,$this->getTotal($rootakun));
+            if ($rootakun->id == Akun::AKTIVA){
+                $rugi_laba += $current_value;
+                $aktiva = $current_value;
+            } else  if ($rootakun->id == Akun::PASIVA){
+                $rugi_laba -= $current_value;
+                $pasiva = $current_value;
+            } else if($rootakun->id == Akun::MODAL){
+                $rugi_laba -= $current_value;
+                $modal = $current_value;
+            } else { //BIAYA PENDAPATAN 
+                $rugi_laba += $current_value;
+            }
         }
-
+        /*
         if($total > 0) {
             $kredit = 0;
             $debit = $total;
         } else {
             $debit = 0;
             $kredit = -$total;
-        }
+        }*/
 
-        fputcsv($output,['Rugi laba tahun berjalan',FormatHelper::currency($debit-$kredit)]);
+        fputcsv($output,['Rugi laba tahun berjalan',FormatHelper::currency($rugi_laba)]);
+        if ($jenis == 'neraca'){
+            fputcsv($output,['Total Pasiva',FormatHelper::currency($pasiva + $modal + $rugi_laba)]);
+        }
         //end of rugi laba tahun berjalan
         $nama_file = ($jenis == 'neraca')?'neraca':'labarugi';
         header('Content-type: application/xlsx');
@@ -85,12 +103,14 @@ class LaporankeuanganController extends BaseController
             $model->updateHarga($tanggal_awal,$tanggal_akhir);
             
             //if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
-            fputcsv($output, ["Total $model->nama",FormatHelper::currency($model->harga)]);           
+            fputcsv($output, ["Total $model->nama",FormatHelper::currency(Akun::nilaiLaporan($model->id,$model->harga))]);           
         } else {
             $model->updateHarga($tanggal_awal,$tanggal_akhir);
 
             //if ($model->harga > 0){ $debit = $model->harga; } else { $kredit = -$model->harga; }
-            fputcsv($output, [$model->nama,FormatHelper::currency($model->harga)]); 
+            //pasiva tidak perlu ditulis
+            if ($model->id != Akun::PASIVA)
+                fputcsv($output, [$model->nama,FormatHelper::currency(Akun::nilaiLaporan($model->id,$model->harga))]); 
         }
     }
 

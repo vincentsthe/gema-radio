@@ -20,6 +20,47 @@ use Yii;
 class Akun extends \yii\db\ActiveRecord
 {
     const KAS = 6;
+    const PENDAPATAN_USAHA = 41;
+    const BIAYA_USAHA = 47;
+    const AKTIVA = 3;
+    const PASIVA = 28;
+    const MODAL = 37;
+    /**
+     * Akun yang isinya nomr 41-93 dibalik nilai debit-kreditnya.
+     * biar gak bingung, ubah di viewnya aja
+     * sama kayk nilai Laporan, kalo mau refactor lagi
+     */
+    public static function nilaiLabaRugi( $id, $harga){
+
+        if ( (41 <= $id) && ($id <= 93))
+            return ($harga * -1);
+        else
+            return $harga;
+    }
+
+
+    /** 
+     * KELOMPOK AKUN / BERTAMBAH SEBELAH / BERKURANG SEBELAH : 
+     * Aktiva Debit Kredit 
+     * Hutang Kredit Debit 
+     * Modal Kredit Debit 
+     * Pendapatan Kredit Debit 
+     * Biaya-Biaya Debit Kredit
+     */
+    public static function nilaiLaporan($id,$harga){
+        //pasiva (hutang)
+        if ((28 <= $id) && ($id <= 36)){
+            return ($harga * -1);
+        } else //modal
+        if ((37 <= $id) && ($id <= 40)){
+            return ($harga * -1);
+        } else  //pendapatan
+        if ((41 <= $id) && ($id <= 93)){
+            return ($harga * -1);
+        } else { //yang gak dibalik
+            return $harga;
+        }
+    }
     /**
      * @inheritdoc
      */

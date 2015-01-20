@@ -4,6 +4,7 @@
     use yii\grid\GridView;
     use yii\helpers\Html;
     use yii\widgets\Pjax;
+    use app\models\db\Akun;
 
 ?>
 <h2>Laporan Keuangan</h2>
@@ -27,32 +28,57 @@
 
 
     <?php
-        $total = 0;
-        foreach($rootAkuns as $rootakun) {
-            $total += getTotalDebit($rootakun);
-        }
+        $rugi_laba = 0;
+        $aktiva = 0;
+        $pasiva = 0;
+        $modal = 0;
 
+        foreach($rootAkuns as $rootakun) {
+            $current_value = Akun::nilaiLaporan($rootakun->id,getTotalDebit($rootakun));
+            
+
+            if ($rootakun->id == Akun::AKTIVA){
+                $rugi_laba += $current_value;
+                $aktiva = $current_value;
+            } else  if ($rootakun->id == Akun::PASIVA){
+                $rugi_laba -= $current_value;
+                $pasiva = $current_value;
+            } else if($rootakun->id == Akun::MODAL){
+                $rugi_laba -= $current_value;
+                $modal = $current_value;
+            } else { //BIAYA PENDAPATAN 
+                $rugi_laba += $current_value;
+            }
+        }    
+        /*
         if($total > 0) {
             $kredit = 0;
             $debit = $total;
         } else {
             $debit = 0;
-            $kredit = -$total;
-        }
+            $kredit = $total;
+        }*/
+
+        $pasiva_seimbang = $pasiva + $modal + $rugi_laba;
     ?>
-    <?php $rugi_laba = $debit - $kredit; ?>
     <tr>
-        <td>Rugi Laba Tahun Berjalan</td>
+        <td><b>Rugi Laba Tahun Berjalan</b></td>
         <td><span class='pull-right <?=($rugi_laba >= 0)?'green':'red';?>'><?=FormatHelper::currency($rugi_laba);?></span></td>
     </tr>
+    <?php if ($jenis == 'neraca'): ?>
+    <tr>
+        <td><b>Total Pasiva</b></td>
+        <td><span class='pull-right green'><?=FormatHelper::currency($pasiva_seimbang);?></span></td>
+    </tr>
+    <?php endif; ?>
 </table>
     <!-- <div class="row">
         <div class="col-md-3 col-md-offset-6">
             <h4>Total</h4>
         </div>
         <div class="col-md-3">
-            <h4 class="green"><strong><?= FormatHelper::currency($debit) ?></strong></h4>
-            <h4 class="red"><strong><?= FormatHelper::currency($kredit) ?></strong></h4>
+            <h4 class="green"><strong><= FormatHelper::currency($debit) ?></strong></h4>
+            <h4 class="red"><strong><= FormatHelper::currency($kredit) ?></strong></h4>
         </div>
         <br><br>
     </div> -->
@@ -75,12 +101,14 @@
             }
             $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
             
-            $color = ($model->harga >= 0)?'green':'red';
-            echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td><span class='pull-right $color'>".FormatHelper::currency($model->harga)."</span></strong></td></tr>";
+            $color = (Akun::nilaiLaporan($model->id,$model->harga) >= 0)?'green':'red';
+            //khusus pasiva ditaruh belakang biar seimbang
+            if ($model->id != Akun::PASIVA)
+                echo "<tr><td>".spaces($depth)."<strong>Total $model->nama</td><td><span class='pull-right $color'>".FormatHelper::currency(Akun::nilaiLaporan($model->id,$model->harga))."</span></strong></td></tr>";
         } else {
             $model->updateHarga($searchModel->tanggal_awal,$searchModel->tanggal_akhir);
-            $color = ($model->harga >= 0)?'green':'red';
-            echo "<tr><td>".spaces($depth)."$model->nama</td><td><span class='pull-right $color'>".FormatHelper::currency($model->harga)."</span></td></tr>";   
+            $color = (Akun::nilaiLaporan($model->id,$model->harga) >= 0)?'green':'red';
+            echo "<tr><td>".spaces($depth)."$model->nama</td><td><span class='pull-right $color'>".FormatHelper::currency(Akun::nilaiLaporan($model->id,$model->harga))."</span></td></tr>";   
         }
     }
 

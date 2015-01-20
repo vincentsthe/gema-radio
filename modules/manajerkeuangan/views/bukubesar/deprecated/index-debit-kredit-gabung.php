@@ -2,6 +2,7 @@
     use yii\grid\GridView;
     use yii\helpers\Html;
     use app\helpers\FormatHelper;
+    use app\models\db\TransaksiLain;
 ?>
 
 
@@ -10,9 +11,10 @@
 <?= $this->render('_search',['model'=>$model,'akuns' => $akuns]); ?><br>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
-    <tr><td>Keadaan awal: (<?=$model->tanggal_awal?>) </td><td><?=FormatHelper::currency($debit);?></td><td><?=FormatHelper::currency($kredit);?></td></tr>
+    <tr><td>Keadaan awal: (<?=$model->tanggal_awal?>) </td><td><?=FormatHelper::currency($debit - $kredit);?></td></tr>
 </table>
 </div>
+<?php $total = $debit - $kredit; ?>
 <?=GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
@@ -28,44 +30,22 @@
         ],
         [
             'class' => 'yii\grid\DataColumn',
-            'label' => 'Debet',
-            'value' => function($model,$key,$index,$column) use(&$debet, &$kredit){
-                if($model->jenis_transaksi == "debit") {
-                    $debet += $model->nominal;
-                    $value = $model->nominal;
-                } else {
-                    //$kredit += $model->nominal;
-                    $value = 0;
-                }
-                return "<span class='pull-right green'>" . FormatHelper::currency($value) . "</span>";
-            },
-            'format' => 'html',
-        ],
-        [
-            'class' => 'yii\grid\DataColumn',
-            'label' => 'Kredit',
-            'value' => function($model,$key,$index,$column) use(&$debet, &$kredit){
-                if($model->jenis_transaksi == "debit") {
-                    //$debet += $model->nominal;
-                    $value = 0;
-                } else {
-                    $kredit += $model->nominal;
-                    $value = $model->nominal;
-                }
-                return "<span class='pull-right red'>" . FormatHelper::currency($value) . "</span>";
+            'label' => 'Nominal',
+            'value' => function($model,$key,$index,$column) use(&$total){
+                $nominal = (($model->jenis_transaksi == TransaksiLain::DEBIT)?1:-1)*$model->nominal;
+                $total += $nominal;
+
+                $color = ($nominal >= 0)?'green':'red';
+                return "<span class='pull-right $color'>" . FormatHelper::currency($nominal) . "</span>";
             },
             'format' => 'html',
         ],
     ],
 ]);
 ?>
-<?php
-    //echo $debet." ".$kredit;
-    if ($debet > $kredit) {$debet -= $kredit; $kredit = 0; } else {$kredit -= $debet; $debet = 0;}
-?>
 <div class='col-xs-6 col-xs-offset-6'>
 <table class='table table-condensed pull-right'>
-    <tr><td>Saldo Akhir (<?=$model->tanggal_akhir?>)</td><td class="green"><?=FormatHelper::currency($debet);?></td><td class="red"><?=FormatHelper::currency($kredit);?></td></tr>
+    <tr><td>Saldo Akhir (<?=$model->tanggal_akhir?>)</td><td class="green"><?=FormatHelper::currency($total);?></td></tr>
 </table>
 </div>
 <?= "Dari tanggal $model->tanggal_awal hingga $model->tanggal_akhir : <br/>"; ?>
